@@ -1,2 +1,2 @@
 # ProgOS_IcsScalarIpsilon
-Prima modifica da locale
+Prima modifica da remoto
