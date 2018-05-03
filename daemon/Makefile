@@ -1,20 +1,20 @@
 .PHONY: build clean
 
-build: firstdaemon writer
+build: daemon writer
 
 clean:
-	@rm firstdaemon writer *.o
+	@rm daemon writer *.o
 
-CC=gcc
-
-firstdaemon: daemon.o
-	$(CC) -o firstdaemon daemon.o
+# # daemon executable
+daemon: daemon.o 
+	gcc -o daemon daemon.o
 	
-daemon.o: daemon.c
-	$(CC) -c daemon.c
+daemon.o: daemon.c config.h
+	gcc -c daemon.c
 	
+# # writer executable
 writer: writer.o
-	$(CC) -o writer writer.o
+	gcc -o writer writer.o
 	
-writer.o: writer.c
-	$(CC) -c writer.c
+writer.o: writer.c config.h
+	gcc -c writer.c

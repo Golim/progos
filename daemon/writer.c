@@ -18,37 +18,30 @@ struct mesg_buffer {
 int check_daemon_exist();
 int check_writer_exist();
  
-int main() {
+int main() 
+{
     long r;
+	key_t key;
+	int msgid;
+	char msgtxt[MAXLEN];
     
     if(check_daemon_exist() == 0){
-		printf("Daemon is not running\nDaemon starting...");
-		char cmd[MAXLEN];
-		getcwd(cmd, MAXLEN);
-		strcat(cmd, "/firstdaemon");
-		system(cmd);
-		printf(" Started!\n");
+		printf("Daemon is not running\n");
+		exit(1);
 	}
     
-    while(1){
-		
-		key_t key;
-		int msgid;
-		char msgtxt[MAXLEN];
-	 
-		key = msgkey(1);
-	 
-		msgid = msgget(key, 0666 | IPC_CREAT);
-		message.mesg_type = 1;
-
-		printf("> ");
+	//create the queue and send messages
+	key = msgkey(1);
+	msgid = msgget(key, 0666 | IPC_CREAT);
+	message.mesg_type = 1;
+    while(1)
+	{
+		//read string
+		printf("Input data: ");
 		r=(long)fgets(msgtxt, MAXLEN, stdin);
-		
-		if(strstr(msgtxt, "exit") != NULL){
-			exit(0);
-		}
-		
 		strcpy(message.mesg_text, msgtxt);
+
+		//send string
 		msgsnd(msgid, &message, sizeof(message), 0);
 		printf("\n");
 		
