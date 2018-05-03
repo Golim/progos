@@ -4,21 +4,23 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
+#include <string.h>
+
+#include <syslog.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <syslog.h>
-#include <string.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
 
 #define MAXLEN 200
-char dir[MAXLEN];
 
+//message queue structure
 struct mesg_buffer {
     long mesg_type;
     char mesg_text[MAXLEN];
 } message;
 
+<<<<<<< HEAD
 static void daemonize(){
     pid_t pid;
     pid = fork();
@@ -46,7 +48,10 @@ void delete_file(){
 	system(cmd);
 }
 
+=======
+>>>>>>> 47ddef8227ecea98803b976dd5445f904f9bfa7c
 int main(int argc, char **argv){
+   	char dir[MAXLEN];
    	char name[MAXLEN];
    	
 	if(argc == 2){ //argv[2] = /path/to/file.txt
@@ -59,6 +64,7 @@ int main(int argc, char **argv){
 	
 	printf("Logfile: %s\n", dir);
 	
+<<<<<<< HEAD
 	daemonize();
 	
 	key_t key = msgkey(0);
@@ -84,10 +90,39 @@ int main(int argc, char **argv){
 				if (f == NULL){
 					//TODO: mandare segnale d'errore
 					printf("Error opening file!\n");
+=======
+	// Transform this process into a daemon process
+	daemonize();
+	
+	//=============   Daemon code  ===============
+	//create the queue
+	key_t key = msgkey(0);
+	int msgid = msgget(key, 0666 | IPC_CREAT);
+	int end = 1;	
+
+    do
+	{
+		// receive a message
+		msgrcv(msgid, &message, sizeof(message), 1, 0);
+		
+		// parse message
+		if(strstr(message.mesg_text, "quit") != NULL)
+			end = 1;
+		else
+		{
+			if(strlen(message.mesg_text) > 0)
+			{
+				// write message on file
+				FILE *f = fopen(dir, "a");
+				if (f == NULL){
+					//TODO: mandare segnale d'errore
+					perror("Error opening file!\n");
+>>>>>>> 47ddef8227ecea98803b976dd5445f904f9bfa7c
 					exit(1);
 				}
 				
 				fprintf(f, "%s", message.mesg_text);
+<<<<<<< HEAD
 				
 				fclose(f);
 			}
@@ -98,5 +133,19 @@ int main(int argc, char **argv){
     
     msgctl(msgid, IPC_RMID, NULL);
 	
+=======
+				fclose(f);
+			}
+			
+			message.mesg_text[0] = '\0';
+		}
+		
+    }while(end);
+
+	//destroy the message queue
+	msgctl(msgid, IPC_RMID, NULL);
+	//============================================
+
+>>>>>>> 47ddef8227ecea98803b976dd5445f904f9bfa7c
     return 0;
 }
