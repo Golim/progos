@@ -22,8 +22,12 @@ int main() {
     long r;
     
     if(check_daemon_exist() == 0){
-		printf("Daemon is not running\n");
-		exit(1);
+		printf("Daemon is not running\nDaemon starting...");
+		char cmd[MAXLEN];
+		getcwd(cmd, MAXLEN);
+		strcat(cmd, "/firstdaemon");
+		system(cmd);
+		printf(" Started!\n");
 	}
     
     while(1){
@@ -37,8 +41,12 @@ int main() {
 		msgid = msgget(key, 0666 | IPC_CREAT);
 		message.mesg_type = 1;
 
-		printf("Input data: ");
+		printf("> ");
 		r=(long)fgets(msgtxt, MAXLEN, stdin);
+		
+		if(strstr(msgtxt, "exit") != NULL){
+			exit(0);
+		}
 		
 		strcpy(message.mesg_text, msgtxt);
 		msgsnd(msgid, &message, sizeof(message), 0);

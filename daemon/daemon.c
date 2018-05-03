@@ -12,6 +12,7 @@
 #include <sys/msg.h>
 
 #define MAXLEN 200
+char dir[MAXLEN];
 
 struct mesg_buffer {
     long mesg_type;
@@ -37,9 +38,15 @@ static void mydaemon(){
         exit(EXIT_FAILURE);
 	}
 }
+
+void delete_file(){
+	char cmd[MAXLEN];
+	strcpy(cmd, "rm ");
+	strcat(cmd, dir);
+	system(cmd);
+}
+
 int main(int argc, char **argv){
-   	char dir[MAXLEN];
-   	
    	char name[MAXLEN];
    	
 	if(argc == 2){ //argv[2] = /path/to/file.txt
@@ -65,6 +72,16 @@ int main(int argc, char **argv){
 		msgctl(msgid, IPC_RMID, NULL);
 		
 		if(strstr(message.mesg_text, "quit") != NULL){
+			exit(0);
+		} else if(strstr(message.mesg_text, "kill") != NULL){
+			exit(0);
+		} else if(strstr(message.mesg_text, "delete") != NULL){
+			delete_file();
+			message.mesg_text[0] = '\0';
+		}
+		
+		if(strstr(message.mesg_text, "clear") != NULL){
+			//TODO: clear file
 			exit(0);
 		}
 		
