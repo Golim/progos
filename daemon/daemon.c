@@ -19,7 +19,7 @@ struct mesg_buffer {
     char mesg_text[MAXLEN];
 } message;
 
-static void mydaemon(){
+static void daemonize(){
     pid_t pid;
     pid = fork();
 
@@ -59,49 +59,44 @@ int main(int argc, char **argv){
 	
 	printf("Logfile: %s\n", dir);
 	
-	mydaemon();
+	daemonize();
 	
-    while (1) {
-		//Daemon code		
-		key_t key;
-		int msgid;
-		key = msgkey(0);
-		msgid = msgget(key, 0666 | IPC_CREAT);
-		
+	key_t key = msgkey(0);
+	int msgid = msgget(key, 0666 | IPC_CREAT);
+	
+    while(1) {
+		//Daemon code
 		msgrcv(msgid, &message, sizeof(message), 1, 0);
-		msgctl(msgid, IPC_RMID, NULL);
 		
 		if(strstr(message.mesg_text, "quit") != NULL){
-			exit(0);
+			exit(1);
 		} else if(strstr(message.mesg_text, "kill") != NULL){
-			exit(0);
+			exit(1);
 		} else if(strstr(message.mesg_text, "delete") != NULL){
 			delete_file();
 			message.mesg_text[0] = '\0';
-		}
-		
-		if(strstr(message.mesg_text, "clear") != NULL){
+		} else if(strstr(message.mesg_text, "clear") != NULL){
 			//TODO: clear file
 			exit(0);
-		}
-		
-		if(strlen(message.mesg_text) > 0){
-			FILE *f = fopen(dir, "a");
-			if (f == NULL){
-				//TODO: mandare segnale d'errore
-				printf("Error opening file!\n");
-				exit(1);
+		} else {
+			if(strlen(message.mesg_text) > 0){
+				FILE *f = fopen(dir, "a");
+				if (f == NULL){
+					//TODO: mandare segnale d'errore
+					printf("Error opening file!\n");
+					exit(1);
+				}
+				
+				fprintf(f, "%s", message.mesg_text);
+				
+				fclose(f);
 			}
-			
-			fprintf(f, "%s", message.mesg_text);
-			
-			fclose(f);
 		}
 		
-		
-        
-        message.mesg_text[0] = '\0';
+		message.mesg_text[0] = '\0';
     }
-
+    
+    msgctl(msgid, IPC_RMID, NULL);
+	
     return 0;
 }

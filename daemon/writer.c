@@ -16,10 +16,12 @@ struct mesg_buffer {
 } message;
 
 int check_daemon_exist();
-int check_writer_exist();
  
 int main() {
     long r;
+    key_t key;
+	int msgid;
+	char msgtxt[MAXLEN];
     
     if(check_daemon_exist() == 0){
 		printf("Daemon is not running\nDaemon starting...");
@@ -29,18 +31,14 @@ int main() {
 		system(cmd);
 		printf(" Started!\n");
 	}
+	
+	//create the queue and send messages
+	key = msgkey(1);
+	msgid = msgget(key, 0666 | IPC_CREAT);
+	message.mesg_type = 1;
     
     while(1){
 		
-		key_t key;
-		int msgid;
-		char msgtxt[MAXLEN];
-	 
-		key = msgkey(1);
-	 
-		msgid = msgget(key, 0666 | IPC_CREAT);
-		message.mesg_type = 1;
-
 		printf("> ");
 		r=(long)fgets(msgtxt, MAXLEN, stdin);
 		
@@ -63,21 +61,6 @@ int check_daemon_exist(){
 	int size = 0;
 	
 	system("ps -xj | grep -v grep | grep firstdaemon >> /tmp/.check");
-	FILE *fp = fopen("/tmp/.check", "r");
-	if (fp != NULL) {
-		fseek (fp, 0, SEEK_END);
-		size = ftell(fp);
-	}
-	fclose(fp);
-	system("rm /tmp/.check");
-	
-	return size;
-}
-
-int check_writer_exist(){
-	int size = 0;
-	
-	system("ps -xj | grep -v grep | grep writer >> /tmp/.check");
 	FILE *fp = fopen("/tmp/.check", "r");
 	if (fp != NULL) {
 		fseek (fp, 0, SEEK_END);
