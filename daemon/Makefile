@@ -1,13 +1,13 @@
 .PHONY: build clean
 
-build: daemon writer
+build: mydaemon writer
 
 clean:
-	@rm daemon writer *.o
+	@rm mydaemon writer *.o
 
 # # daemon executable
-daemon: daemon.o 
-	gcc -o daemon daemon.o
+mydaemon: daemon.o 
+	gcc -o mydaemon daemon.o
 	
 daemon.o: daemon.c config.h
 	gcc -c daemon.c
