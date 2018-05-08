@@ -25,9 +25,12 @@ int main() {
     
     if(check_daemon_exist() == 0){
 		printf("Daemon is not running\nDaemon starting...");
-		char cmd[MAXLEN];
-		getcwd(cmd, MAXLEN);
-		strcat(cmd, "/firstdaemon");
+
+		char *args[] = {NULL, NULL};
+		char *cmd = malloc(MAXLEN);
+		/*getcwd(cmd, MAXLEN);
+		strcat(cmd, "/mydaemon");*/
+		strcpy(cmd, "./mydaemon");
 		system(cmd);
 		printf(" Started!\n");
 	}
