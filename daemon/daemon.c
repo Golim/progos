@@ -43,13 +43,13 @@ int main(int argc, char **argv){
 	
 	key_t key = msgkey(0);
 	int msgid = msgget(key, 0666 | IPC_CREAT);
-	
-    while(1) {
+	int continua = 0;
+    while(continua == 0) {
 		//Daemon code
 		msgrcv(msgid, &message, sizeof(message), 1, 0);
 		
 		if(strstr(message.mesg_text, "quit") != NULL || strstr(message.mesg_text, "kill") != NULL)
-			exit(1);
+			continua = 1;
 		else if(strstr(message.mesg_text, "delete") != NULL)
 		{
 			delete_file();
@@ -61,7 +61,7 @@ int main(int argc, char **argv){
 			if (f == NULL){
 				//TODO: mandare segnale d'errore
 				printf("Error opening file!\n");
-				exit(1);
+				continua = (1);
 			}
 			
 			fprintf(f, "\0");

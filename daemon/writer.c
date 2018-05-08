@@ -7,6 +7,9 @@
 
 #include <string.h>
 #include <unistd.h>
+
+#include <errno.h>
+
 #define MAXLEN (100)
  
 // structure for message queue
@@ -15,17 +18,19 @@ struct mesg_buffer {
     char mesg_text[MAXLEN];
 } message;
 
-int check_daemon_exist();
- 
 int main() {
     long r;
     key_t key;
 	int msgid;
 	char msgtxt[MAXLEN];
     
-    if(check_daemon_exist() == 0){
-		printf("Daemon is not running\nDaemon starting...");
+    //create the queue and send messages
+	key = msgkey(1);
+	msgid = msgget(key, 0666);
 
+	if(msgid == -1 && errno == ENOENT)
+    {
+		printf("Daemon is not running\nDaemon starting...");
 		char *args[] = {NULL, NULL};
 		char *cmd = malloc(MAXLEN);
 		/*getcwd(cmd, MAXLEN);
@@ -34,10 +39,7 @@ int main() {
 		system(cmd);
 		printf(" Started!\n");
 	}
-	
-	//create the queue and send messages
-	key = msgkey(1);
-	msgid = msgget(key, 0666 | IPC_CREAT);
+
 	message.mesg_type = 1;
     
     while(1){
@@ -58,19 +60,4 @@ int main() {
 		}
 	}
     return 0;
-}
-
-int check_daemon_exist(){
-	int size = 0;
-	
-	system("ps -xj | grep -v grep | grep mydaemon >> /tmp/.check");
-	FILE *fp = fopen("/tmp/.check", "r");
-	if (fp != NULL) {
-		fseek (fp, 0, SEEK_END);
-		size = ftell(fp);
-	}
-	fclose(fp);
-	system("rm /tmp/.check");
-	
-	return size;
 }
