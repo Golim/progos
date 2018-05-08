@@ -11,7 +11,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-char *tmpfiletpl="queue--ftok.tmp";
+char *tmpfiletpl="queue.tmp";
 
 int msgkey(int mode) { // mode == 0 for READ, 1 for write
 	char tmpfile[TMPLEN];

@@ -22,21 +22,22 @@ int main() {
 	int msgid;
 	char msgtxt[MAXLEN];
     
-    if(msgid == -1 && errno == ENOENT) {
-		printf("Daemon is not running\nDaemon starting...");
-
-		char *args[] = {NULL, NULL};
-		char *cmd = malloc(MAXLEN);
-		strcpy(cmd, "./mydaemon");
-		system(cmd);
-		printf(" Started!\n");
-	}
-		
 	//create the queue and send messages
 	key = msgkey(1);
 	msgid = msgget(key, 0666);
 	message.mesg_type = 1;
-    
+	
+	if(msgid == -1 && errno == ENOENT) {
+		printf("Daemon is not running\nDaemon starting...");
+
+		char *args[] = {NULL, NULL};
+		char *cmd = malloc(MAXLEN);
+		getcwd(cmd, MAXLEN);
+		strcpy(cmd, "/mydaemon");
+		system(cmd);
+		printf(" Started!\n");
+	}
+	
     while(1){
 		
 		printf("> ");
@@ -48,11 +49,11 @@ int main() {
 		
 		strcpy(message.mesg_text, msgtxt);
 		msgsnd(msgid, &message, sizeof(message), 0);
-		printf("\n");
 		
 		if(strstr(msgtxt, "quit") != NULL){
 			exit(0);
 		}
 	}
+	
     return 0;
 }

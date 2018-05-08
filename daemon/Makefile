@@ -1,20 +1,13 @@
 .PHONY: build clean
 
-build: mydaemon writer
+build: logger
 
 clean:
-	@rm mydaemon writer *.o
+	@rm logger *.o log.txt *.csv
 
-# # daemon executable
-mydaemon: daemon.o 
-	gcc -o mydaemon daemon.o
+# # logger executable
+logger: logger.o
+	gcc -o logger logger.o
 	
-daemon.o: daemon.c config.h
-	gcc -c daemon.c
-	
-# # writer executable
-writer: writer.o
-	gcc -o writer writer.o
-	
-writer.o: writer.c config.h
-	gcc -c writer.c
+logger.o: logger.c config.h
+	gcc -c logger.c

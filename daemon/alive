@@ -1,0 +1,4 @@
+#/bin/bash
+#Usage: ./comando.sh programma
+
+ps -xj | grep -v grep | grep $1 | grep -v geany
