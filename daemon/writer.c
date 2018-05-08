@@ -13,6 +13,7 @@
 struct mesg_buffer {
     long mesg_type;
     char mesg_text[MAXLEN];
+	char file_name[MAXLEN];
 } message;
 
 int check_daemon_exist();
@@ -34,10 +35,10 @@ int main() {
 		system(cmd);
 		printf(" Started!\n");
 	}
-	
+		
 	//create the queue and send messages
 	key = msgkey(1);
-	msgid = msgget(key, 0666 | IPC_CREAT);
+	msgid = msgget(key, 0666);
 	message.mesg_type = 1;
     
     while(1){
