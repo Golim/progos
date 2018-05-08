@@ -61,7 +61,7 @@ int main(int argc, char **argv){
 			if (f == NULL){
 				//TODO: mandare segnale d'errore
 				printf("Error opening file!\n");
-				continua = (1);
+				continua =(1);
 			}
 			
 			fprintf(f, "\0");
