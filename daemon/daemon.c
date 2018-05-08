@@ -48,18 +48,29 @@ int main(int argc, char **argv){
 		//Daemon code
 		msgrcv(msgid, &message, sizeof(message), 1, 0);
 		
-		if(strstr(message.mesg_text, "quit") != NULL){
+		if(strstr(message.mesg_text, "quit") != NULL || strstr(message.mesg_text, "kill") != NULL)
 			exit(1);
-		} else if(strstr(message.mesg_text, "kill") != NULL){
-			exit(1);
-		} else if(strstr(message.mesg_text, "delete") != NULL){
+		else if(strstr(message.mesg_text, "delete") != NULL)
+		{
 			delete_file();
 			message.mesg_text[0] = '\0';
-		} else if(strstr(message.mesg_text, "clear") != NULL){
-			//TODO: clear file
-			exit(0);
-		} else {
-			if(strlen(message.mesg_text) > 0){
+		} 
+		else if(strstr(message.mesg_text, "clear") != NULL)
+		{
+			FILE *f = fopen(dir, "w");
+			if (f == NULL){
+				//TODO: mandare segnale d'errore
+				printf("Error opening file!\n");
+				exit(1);
+			}
+			
+			fprintf(f, "\0");
+			fclose(f);
+		} 
+		else 
+		{
+			if(strlen(message.mesg_text) > 0)
+			{
 				FILE *f = fopen(dir, "a");
 				if (f == NULL){
 					//TODO: mandare segnale d'errore
@@ -76,6 +87,7 @@ int main(int argc, char **argv){
 		message.mesg_text[0] = '\0';
     }
     
+	// elimina la message queue
     msgctl(msgid, IPC_RMID, NULL);
 	
     return 0;
