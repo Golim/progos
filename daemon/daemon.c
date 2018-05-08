@@ -24,7 +24,6 @@ struct mesg_buffer {
 int main(int argc, char **argv){
    	char name[MAXLEN];
 	
-	//daemonize();
 	daemon(1, 1);
 	
 	key_t key = msgkey(0);
@@ -32,7 +31,6 @@ int main(int argc, char **argv){
 	
 	int end = 1;
     while(end) {
-		//Daemon code
 		msgrcv(msgid, &message, sizeof(message), 1, 0);
 		
 		if(strlen(message.mesg_text) > 0) {

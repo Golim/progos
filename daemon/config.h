@@ -37,24 +37,3 @@ int msgkey(int mode) { // mode == 0 for READ, 1 for write
 	//printf("extref='%s', tmpfile='%s' (ft=%d), extid='%d', msgkey='%d'\n", EXTREF, tmpfile, ft, EXTID, key);
 	return (key);
 }
-
-void daemonize()
-{
-    pid_t pid;
-    pid = fork();
-
-    if (pid < 0){
-        printf("?Error while forking\n");
-        exit(EXIT_FAILURE);
-	}
-	
-    if (pid > 0){
-		//Terminate parent
-        exit(EXIT_SUCCESS);
-	}
-
-    if (setsid() < 0){
-		printf("?Error while changing sid\n");
-        exit(EXIT_FAILURE);
-	}
-}

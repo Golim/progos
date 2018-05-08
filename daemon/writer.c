@@ -4,10 +4,10 @@
 #include <stdlib.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
-
+#include <errno.h>
 #include <string.h>
 #include <unistd.h>
-#define MAXLEN (100)
+#define MAXLEN 200
  
 // structure for message queue
 struct mesg_buffer {
@@ -15,8 +15,6 @@ struct mesg_buffer {
     char mesg_text[MAXLEN];
 	char file_name[MAXLEN];
 } message;
-
-int check_daemon_exist();
  
 int main() {
     long r;
@@ -24,13 +22,11 @@ int main() {
 	int msgid;
 	char msgtxt[MAXLEN];
     
-    if(check_daemon_exist() == 0){
+    if(msgid == -1 && errno == ENOENT) {
 		printf("Daemon is not running\nDaemon starting...");
 
 		char *args[] = {NULL, NULL};
 		char *cmd = malloc(MAXLEN);
-		/*getcwd(cmd, MAXLEN);
-		strcat(cmd, "/mydaemon");*/
 		strcpy(cmd, "./mydaemon");
 		system(cmd);
 		printf(" Started!\n");
@@ -59,19 +55,4 @@ int main() {
 		}
 	}
     return 0;
-}
-
-int check_daemon_exist(){
-	int size = 0;
-	
-	system("ps -xj | grep -v grep | grep mydaemon >> /tmp/.check");
-	FILE *fp = fopen("/tmp/.check", "r");
-	if (fp != NULL) {
-		fseek (fp, 0, SEEK_END);
-		size = ftell(fp);
-	}
-	fclose(fp);
-	system("rm /tmp/.check");
-	
-	return size;
 }
