@@ -28,3 +28,13 @@ TODO
 
 
 See the list of [contributors](https://github.com/PonzaMatteo/progos/graphs/contributors)
+
+struct mesg_buffer {
+    long mesg_type;
+    char mesg_text[MAXLEN];
+    char file_name[MAXLEN];
+}
+
+ mesg_type:
+  - 1 : messaggio txt se (filename == "" ) stampa ne file .txt di default
+  - 2 : messaggio csv se (filename == "" ) stampa ne file .csv di default
