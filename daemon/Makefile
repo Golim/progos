@@ -3,7 +3,7 @@
 build: logger
 
 clean:
-	@rm logger *.o log.txt *.csv
+	@rm -f logger *.o log.txt *.csv
 
 # # logger executable
 logger: logger.o
