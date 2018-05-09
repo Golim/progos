@@ -11,10 +11,17 @@ const long ARG_MAX_LEN = 255;
 
 int stats(char *cmd, char *stat);
 int separe_command_args(char* cmd, char * name, char* arg);
+
 int main(int argc, char **argv)
 {
 	char * str = malloc (sizeof(char)*STATS_MAX_LEN);
 	printf("[Inizio]\n");
+
+	if(argc < 2)
+	{
+		perror("ERROR: Insufficient argouments!\nusage: ./stats \"<command> [<command>..<command>]\"\n");
+		exit(EXIT_FAILURE);
+	}
 
 	stats(argv[1], str);
 
