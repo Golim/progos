@@ -36,11 +36,16 @@ int main() {
 		//figlio
 		daemon(1, 1);
 		key_t key = msgkey(0);
-		int msgid = msgget(key, 0666 | IPC_CREAT);
+		int msgid = msgget(key, 0666);
 		
 		//Find if exist the logger daemon
-		//if(msgid == -1 && errno == ENOENT)
-			//msgid = msgget(key, 0666 | IPC_CREAT); //If not, create the queue
+		if(msgid == -1 && errno == ENOENT){
+			printf("Starting daemon..");
+			msgid = msgget(key, 0666 | IPC_CREAT); //If not, create the queue
+			printf(" Started!\n");
+		} else {
+			exit(0);//If exist, exit
+		}
 		
 		//int end = 1;
 		while(1) {
