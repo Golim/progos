@@ -7,7 +7,14 @@
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
+<<<<<<< HEAD:daemon/old/writer.c
 #define MAXLEN 200
+=======
+
+#include <errno.h>
+
+#define MAXLEN (100)
+>>>>>>> ponza:daemon/writer.c
  
 // structure for message queue
 struct mesg_buffer {
@@ -15,13 +22,18 @@ struct mesg_buffer {
     char mesg_text[MAXLEN];
 	char file_name[MAXLEN];
 } message;
+<<<<<<< HEAD:daemon/old/writer.c
  
+=======
+
+>>>>>>> ponza:daemon/writer.c
 int main() {
     long r;
     key_t key;
 	int msgid;
 	char msgtxt[MAXLEN];
     
+<<<<<<< HEAD:daemon/old/writer.c
 	//create the queue and send messages
 	key = msgkey(1);
 	msgid = msgget(key, 0666);
@@ -29,7 +41,15 @@ int main() {
 	
 	if(msgid == -1 && errno == ENOENT) {
 		printf("Daemon is not running\nDaemon starting...");
+=======
+    //create the queue and send messages
+	key = msgkey(1);
+	msgid = msgget(key, 0666);
+>>>>>>> ponza:daemon/writer.c
 
+	if(msgid == -1 && errno == ENOENT)
+    {
+		printf("Daemon is not running\nDaemon starting...");
 		char *args[] = {NULL, NULL};
 		char *cmd = malloc(MAXLEN);
 		getcwd(cmd, MAXLEN);
@@ -37,7 +57,13 @@ int main() {
 		system(cmd);
 		printf(" Started!\n");
 	}
+<<<<<<< HEAD:daemon/old/writer.c
 	
+=======
+
+	message.mesg_type = 1;
+    
+>>>>>>> ponza:daemon/writer.c
     while(1){
 		
 		printf("> ");
@@ -54,6 +80,11 @@ int main() {
 			exit(0);
 		}
 	}
+<<<<<<< HEAD:daemon/old/writer.c
 	
     return 0;
 }
+=======
+    return 0;
+}
+>>>>>>> ponza:daemon/writer.c
