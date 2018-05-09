@@ -12,3 +12,6 @@ Se si manda un quit troppo velocemente dopo l'avvio di logger (qualche secondo) 
 
 Per verificare se il programma è in esecuzione:
 ./alive logger
+
+Per chiudere gli eventuali logger in esecuzione:
+pkill logger
