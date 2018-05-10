@@ -1,0 +1,7 @@
+Le cartelle con i sorgenti: src/
+  -/logger : tutte le funzioni che riguardano solamente la scrittura
+  -/messagin: le funzioni che riguardano la comunicazione tra processi
+  -/stats: funzioni per il calcolo delle statistiche
+  util.h : funzioni di utilià varie, solo header per ora.
+
+La cartella script contiene vari programmi per automatizzare processi.

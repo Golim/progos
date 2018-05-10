@@ -1,0 +1,33 @@
+1) Funzione che prende in input una stringa del tipo:
+  " [a] | [b] "
+  e la spezza, ottenento [a] e [b] come stringhe separate
+1bis)
+  Un comando [cmd] bash può essere formato da:
+    -Comandi Singoli: una stringa con efentuali parametri
+      "[str] [arg_1]...[arg_n]"
+    -Comandi in Pipe:
+      "[cmd] | [cmd]"
+    -Comandi in AND
+      "[cmd] && [cmd]"
+    -Comandi in OR:
+      "[cmd] || [cmd]"
+    -Lista di comandi:
+      $[cmd] ; [cmd] ; [cmd];
+    -Comando in background con & ha poco senso con il nostro logger;
+
+  Stabilire priorità degli operatori e prevedere la possibilità di delimitare un comando tramite ([cmd_1]) [opeartore] [cmd_2]
+  es:
+    "ls | wc -m" )              -> conta parole di ls
+    "(ls ; ls ; ls ; ) | wc -m" -> conta le paole di 3 ls
+  Come si deve comportare il nostro programma?
+
+2) Calcolare altre statistiche:
+	clock_gettime(CLOCK_REALTIME, &clock_start);
+  Sul manuale si trovano altri parametri per CLOCK_REALTIME, con gli altri si ottengono tempistiche diverse come il tempo effettivo,  (CLOCK_PROCESS_CPUTIME_ID)
+
+3) inserire un'opzione per vedere oppure no le unità di misura 
+
+4) creare un file src/main.c che rappresenta il punto di entrata del programma, processa gli argomenti (fa già quasi tuto stats, basta tirare fuori da là) e poi fa ciò che deve fare.
+
+
+non mi viene in mente altro

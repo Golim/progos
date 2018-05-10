@@ -1,5 +1,0 @@
-1) si può fare un sh al posto di un eseguibile binario
-
-2) si può usare la funzione per creare il demone di unistd
-
-3

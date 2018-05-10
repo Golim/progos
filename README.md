@@ -29,11 +29,8 @@ TODO
 
 See the list of [contributors](https://github.com/PonzaMatteo/progos/graphs/contributors)
 
-<<<<<<< HEAD
-=======
 
 ##DOCS
->>>>>>> ponza
 struct mesg_buffer {
     long mesg_type;
     char mesg_text[MAXLEN];
