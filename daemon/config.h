@@ -56,18 +56,18 @@ struct mesg_buffer {
 
 void write_log(struct mesg_buffer *msg)
 {
-	FILE* loggher_logs = fopen("/tmp/logger_logs.txt", "a");
+	FILE* logger_logs = fopen("/tmp/logger_logs.txt", "a");
 	FILE* f;
 
 	time_t t = time(NULL);
 	struct tm tm = *localtime(&t);
-	fprintf(loggher_logs, "%d:%d:%d) message received \"%s\"\n", tm.tm_hour, tm.tm_min, tm.tm_sec, msg->mesg_text);
+	fprintf(logger_logs, "%d:%d:%d) message received \"%s\"\n", tm.tm_hour, tm.tm_min, tm.tm_sec, msg->mesg_text);
 	
 	if(strlen(msg->mesg_text) > 0) 
 	{
 		if(strstr(msg->mesg_text, "quit") != NULL || strstr(msg->mesg_text, "kill") != NULL) 
 		{
-			fprintf(loggher_logs, "%d:%d:%d) logger terminated\n", tm.tm_hour, tm.tm_min, tm.tm_sec, msg->mesg_text);
+			fprintf(logger_logs, "%d:%d:%d) logger terminated\n", tm.tm_hour, tm.tm_min, tm.tm_sec, msg->mesg_text);
 			exit(0);
 		} 
 		else 
@@ -78,14 +78,16 @@ void write_log(struct mesg_buffer *msg)
 				{
 					case 1:
 						f = fopen(DEF_TXT, "a");
-						fprintf(loggher_logs, "%d:%d:%d) message recorded in %s\n", tm.tm_hour, tm.tm_min, tm.tm_sec, msg->mesg_text, msg->file_name);
+						fprintf(logger_logs, "%d:%d:%d) message recorded in %s\n", tm.tm_hour, tm.tm_min, tm.tm_sec, msg->mesg_text, msg->file_name);
+						fprintf(f, "%s\n", msg->mesg_text);
 						break;
 					case 2:
 						f = fopen(DEF_CSV, "a");
-						fprintf(loggher_logs, "%d:%d:%d) message recorded in %s\n", tm.tm_hour, tm.tm_min, tm.tm_sec, msg->mesg_text, msg->file_name);
+						fprintf(logger_logs, "%d:%d:%d) message recorded in %s\n", tm.tm_hour, tm.tm_min, tm.tm_sec, msg->mesg_text, msg->file_name);
+						fprintf(f, "%s", msg->mesg_text);
 						break;
 					default:
-						fprintf(loggher_logs, "%d:%d:%d) ERR: mesg_type not recognized!\n", tm.tm_hour, tm.tm_min, tm.tm_sec, msg->mesg_text);
+						fprintf(logger_logs, "%d:%d:%d) ERR: mesg_type not recognized!\n", tm.tm_hour, tm.tm_min, tm.tm_sec, msg->mesg_text);
 						break;
 				}//end switch
 			}
@@ -96,14 +98,14 @@ void write_log(struct mesg_buffer *msg)
 				{
 					case 1:
 						f = fopen(DEF_TXT, "a");
-						fprintf(loggher_logs, "%d:%d:%d) message recorded in %s\n", tm.tm_hour, tm.tm_min, tm.tm_sec, msg->mesg_text, msg->file_name);
+						fprintf(logger_logs, "%d:%d:%d) message recorded in %s\n", tm.tm_hour, tm.tm_min, tm.tm_sec, msg->mesg_text, msg->file_name);
 						break;
 					case 2:
 						f = fopen(DEF_CSV, "a");
-						fprintf(loggher_logs, "%d:%d:%d) message recorded in %s\n", tm.tm_hour, tm.tm_min, tm.tm_sec, msg->mesg_text, msg->file_name);
+						fprintf(logger_logs, "%d:%d:%d) message recorded in %s\n", tm.tm_hour, tm.tm_min, tm.tm_sec, msg->mesg_text, msg->file_name);
 						break;
 					default:
-						fprintf(loggher_logs, "%d:%d:%d) ERR: mesg_type not recognized!\n", tm.tm_hour, tm.tm_min, tm.tm_sec, msg->mesg_text);
+						fprintf(logger_logs, "%d:%d:%d) ERR: mesg_type not recognized!\n", tm.tm_hour, tm.tm_min, tm.tm_sec, msg->mesg_text);
 						break;
 				}//end switch
 			}//end if(!strlen(msg->file_name) > 0)

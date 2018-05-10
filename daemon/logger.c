@@ -9,61 +9,71 @@
 #include <unistd.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
-
+#include <sys/wait.h>
 
 #define MAXLEN 200
- /*
-// structure for message queue
-struct mesg_buffer {
-    long mesg_type;
-    char mesg_text[MAXLEN];
-	char file_name[MAXLEN];
-} message;*/
 
 struct mesg_buffer message;
 
-int main() 
-{	
-	int fid = fork();
+/**
+ * 
+ * Padre: analizzatore comandi
+ * Figlio: serve solo a generare il demone
+ * Nipote: logger (demone)
+ * 
+ * */
 
+int main() {
+	int fid = fork(); //Genero figlio
+	
 	if(fid < 0){
-		printf("?ERROR while forking\n");
+		printf("?ERROR\n");
 		exit(1);
 	}
 	
 	if(fid == 0){
-		//figlio
-		key_t key = msgkey(0);
-		int msgid = msgget(key, 0666);
+		//Figlio
+		int fid2 = fork(); //Genero nipote
 		
-		//Find if exist the logger daemon
-		if(msgid == -1 && errno == ENOENT){
-			printf("Starting daemon..");
-			msgid = msgget(key, 0666 | IPC_CREAT); //If not, create the queue
-			printf(" Started!\n");
+		if(fid2 < 0){
+			printf("?ERROR 2\n");
+			exit(1);
+		}
+		
+		if (fid2 == 0){
+			//Nipote (demone)
+			
+			daemon(1, 1);
+			
+			key_t key = msgkey(0);
+			int msgid = msgget(key, 0666 | IPC_CREAT);
+			
+			/*
+			if(msgid == -1 && errno == ENOENT){
+				msgid = msgget(key, 0666 | IPC_CREAT);
+			} else {
+				exit(0);
+			}	
+			*/
+			while(1) {
+				msgrcv(msgid, &message, sizeof(message), 1, 0);
+				
+				write_log(&message);
+				
+				//clear message buffer
+				message.mesg_text[0] = '\0';
+			}
+			
+			//Elimina la message queue
+			msgctl(msgid, IPC_RMID, NULL);
 		} else {
-			exit(0);//If exist, exit
+			//Figlio
+			exit(0); //L'unica funzione del figlio e' creare il nipote
 		}
-
-		daemon(1, 1);
-		
-		//int end = 1;
-		while(1) {
-			msgrcv(msgid, &message, sizeof(message), 1, 0);
-			
-			write_log(&message);
-			
-			//clear message buffer
-			message.mesg_text[0] = '\0';
-		}
-		
-		//Elimina la message queue
-		msgctl(msgid, IPC_RMID, NULL);
-	}
-	
-	
-	else {
+	} else {
 		//padre
+		wait(NULL); //Aspetto che venga creato il demone
+		
 		long r;
 		key_t key;
 		int msgid;
@@ -74,8 +84,10 @@ int main()
 		msgid = msgget(key, 0666);
 		message.mesg_type = 1;
 		
-		//if(msgid == -1 && errno == ENOENT)
-			//TOTO
+		while(msgid == -1 && errno == ENOENT){
+			printf("La coda non esiste ancora, attendo un po'...\n");
+			sleep(2);
+		}
 		
 		while(1){
 			
