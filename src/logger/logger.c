@@ -43,6 +43,7 @@ int main()
 	if (fid == 0)
 	{
 		fprintf(logger_logs, "%d:%d:%d) figlio generato\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
+		printf("figlio di puttano 1\n");
 		//Figlio
 		int fid2 = fork();
 		
@@ -55,6 +56,7 @@ int main()
 		if(fid == 0)	//Nipote (demone)
 		{
 				fprintf(logger_logs, "%d:%d:%d) nipote generato\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
+				printf("figlio di puttano 2\n");
 
 				//msg message;
 				daemon(1, 1); //unistd.h
@@ -82,9 +84,9 @@ int main()
 	}
 	else
 	{
-		//padre
-		wait(NULL); //Aspetto che venga creato il demone
+		sleep(1);
 
+		//padre
 		long r;
 		key_t key;
 		int msgid;
@@ -100,6 +102,7 @@ int main()
 			printf("La coda non esiste ancora, attendo un po'...\n");
 			sleep(2);
 		}
+
 
 		while (1)
 		{
