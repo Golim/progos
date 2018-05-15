@@ -1,7 +1,5 @@
-const string DEF_TXT = "log.txt";
-const string DEF_CSV = "log.csv";
+#define DEF_TXT ("/tmp/log.txt")
+#define DEF_CSV ("/tmp/log.csv")
 
-void write_log( msg *m);
-
-extern int msgkey(int mode);
-void write_log(msg *m);
+int write_log(msg *m);
+int elaborate(msg *m);

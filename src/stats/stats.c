@@ -5,7 +5,6 @@
 #include <string.h>
 
 #include "../util.h"
-#include "../messaging/messaging.h"
 #include "stats.h"
 
 int main(int argc, char **argv)
@@ -20,9 +19,10 @@ int main(int argc, char **argv)
 
 	//Initialize default
 	m = malloc(sizeof(msg));
-	strcpy(m->file_name, "");
-	strcpy(m->mesg_text, "");
-	m->mesg_type = 1;
+
+	strcpy(m->msg_log.fn, "");
+	strcpy(m->msg_log.txt, "");
+	m->type = TYPE_CSV;
 
 	strcpy(sep, ",");
 
@@ -58,7 +58,7 @@ int main(int argc, char **argv)
 				{
 					strcpy(sep, "\t");
 					valido = TRUE;
-					m->mesg_type = 2;
+					m->type = TYPE_TXT;
 				}
 				else
 					valido = 0;
@@ -68,7 +68,7 @@ int main(int argc, char **argv)
 				if (strcmp(value, "") != 0)
 				{
 					valido = TRUE;
-					strcpy(m->file_name, value);
+					strcpy(m->msg_log.fn, value);
 				}
 			}
 		}
@@ -90,14 +90,14 @@ int main(int argc, char **argv)
 	char *str = malloc(sizeof(char) * STATS_MAX_LEN);
 
 	stats(cmd, str, sep);
-	strcpy(m->mesg_text, str);
+	strcpy(m->msg_log.txt, str);
 	send_to_logger(m);
 	free(m);
 }
 
 void send_to_logger(msg *m)
 {
-	printf("\n ------------------------------------ \n | %li | %s | %s | -->\n ------------------------------------\n", m->mesg_type, m->mesg_text, m->file_name);
+	printf("\n ------------------------------------ \n | %li | %s | %s | -->\n ------------------------------------\n", m->type, m->msg_log.txt, m->msg_log.fn);
 }
 
 int stats(char *cmd, char *stat, char *sep)
