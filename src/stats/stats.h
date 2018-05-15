@@ -10,3 +10,4 @@ int separe_command_args(char *cmd, char *name, char *arg);
 void send_to_logger(msg *m);
 void print_usage();
 void print_help();
+void tolowercase(char *s);

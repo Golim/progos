@@ -3,6 +3,7 @@
 #include <time.h>
 #include <sys/types.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "../util.h"
 #include "stats.h"
@@ -44,14 +45,16 @@ int main(int argc, char **argv)
 		char *option = "";
 		char *value = "";
 		valido = FALSE;
-
+		
 		if (index(argv[i], '=') != NULL)
 		{
 			//TODO controlla che le opzioni non siano già state impostate
 			//opzione=valore
 			option = strtok(argv[i], "=");
 			value = strtok(NULL, "");
-
+			
+			tolowercase(value);
+			
 			if (strcmp(option, "--format") == 0 || strcmp(option, "-f") == 0)
 			{
 				if (strcmp(value, "csv") == 0)
@@ -75,11 +78,12 @@ int main(int argc, char **argv)
 			}
 			else if (strcmp(option, "--measure-units") == 0 || strcmp(option, "-mu") == 0)
 			{
-				if (strcmp(value, "FALSE") != 0)
+				if (strcmp(value, "false") == 0)
 				{
 					mu = FALSE;
 					valido = TRUE;
-				} else if(strcmp(value, "TRUE") != 0){
+				} else if(strcmp(value, "true") == 0){
+					mu = TRUE;
 					valido = TRUE;
 				}
 			}
@@ -147,6 +151,7 @@ int stats(char *cmd, char *stat, char *sep, bool mu) //mu: stampa unità di misu
 	strcat(stat, sep);
 	strcat(stat, argomenti);
 	strcat(stat, sep);
+	
 	if(mu == TRUE)
 		sprintf(stat, "%s%lims", stat, durata_realtime);
 	else
@@ -187,23 +192,49 @@ int separe_command_args(char *cmd, char *name, char *arg)
 	return i;
 }
 
+void tolowercase(char *s){
+	for(int i = 0; s[i]; i++){
+		if('A' <= s[i] && s[i] <= 'Z')
+			s[i] = s[i] - ('A' - 'a');
+	}
+}
+
 void print_usage()
 {
-	printf("Usage:  stats [OPTION]...[COMMAND]\n");
+	printf("Usage:  stats [OPTION]... [COMMAND]\n");
 	printf("Try 'stats --help' for more information.\n");
 }
+
 void print_help()
 {
-	printf("Usage:  stats [OPTION]...[COMMAND]\n");
+	printf("Usage:  stats [OPTION]... [COMMAND]\n");
 	printf("Execute COMMAND , log various statistics in a file\n");
 	printf("The command MUST be the last argument passed to stats");
-	printf("Example:  stats  ls \n");
+	printf("Example:  stats  ls \n");//Aggiungere che se ci sono anche argomenti il comando va passato tra virgolette
 	printf("\n");
 
 	printf("-OPTION\n");
 	printf("All OPTION are not mandatory. Contemplated options are:\n");
-	printf(" -h \t \t--help \t\t print this message\n");
-	printf(" -lf=[v]\t--logfile=[v]\t where [v] specifies the log file where stats will be appended\n");
-	printf(" -f=[v] \t--format=[v]\t specifies the format for the output. [v] can be 'csv' or 'txt'\n");
+	
+	//-f --format
+	printf("%10s","-f=[v], ");
+	printf("%-20s","--format=[v]");
+	printf("%s","specifies the format for the output. [v] can be 'csv' or 'txt'\n"); //Aggiungere default="txt"(??)
+	
+	//-lf --logfile
+	printf("%10s","-lf=[v], ");
+	printf("%-20s","--logfile=[v]");
+	printf("%s","where [v] specifies the log file where stats will be appended\n");
+	
+	//-mu --measure-unit
+	printf("%10s","-mu=[v], ");
+	printf("%-20s","-measure-units=[v]");
+	printf("%s","specifies whether the output should contain the unit of measurement. [v] can be 'true' or 'false'\n");
+	
+	//-h --help
+	printf("%10s","-h, ");
+	printf("%-20s","--help");
+	printf("%s","display this help and exit\n");
+	
 	printf("\n");
 }
