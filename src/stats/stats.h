@@ -5,7 +5,7 @@ const long STATS_MAX_LEN = 255;
 const long ARG_MAX_LEN = 255;
 
 // Functions
-int stats(char *cmd, char *stat, char *sep);
+int stats(char *cmd, char *stat, char *sep, bool mu);
 int separe_command_args(char *cmd, char *name, char *arg);
 void send_to_logger(msg *m);
 void print_usage();
