@@ -9,25 +9,23 @@
 #include <sys/ipc.h>
 #include <sys/msg.h>
 
-#include "../util.h"
-#include "../message_passing/config.h"
-#include "../logger/logger.h"
+#include "program.h"
 
 void genera_demone();
 void esegui_programma();
 
-int main(int argc, char const *argv[])
+int run(int format, char *filename, char *cmd)
 {
-  if ( init_client() < 0 )
+  if (init_client() < 0)
   {
     genera_demone();
     printf("[deamon generated]\n");
   }
 
-  if(init_client() == 0 )
+  if (init_client() == 0)
   {
     printf("[Pronto per eseguire il programma]\n");
-    esegui_programma();
+    esegui_programma(format, filename, cmd);
   }
   else
   {
@@ -50,7 +48,7 @@ void genera_demone()
   {
     //Codice figlio:
     printf("[Figlio]:%d \n", getpid());
-    if(init_server() < 0)
+    if (init_server() < 0)
     {
       fprintf(stderr, "Errore nella crezione della coda\n");
       exit(EXIT_FAILURE);
@@ -64,47 +62,37 @@ void genera_demone()
     printf("[Demone]:%d \n", getpid());
     start_listening(); // Quando finisce di ascoltare deve eliminare la coda e terminare con successo!!
     printf("[Elimino la coda!]\n");
-    if(delete_server() <0)
+    if (delete_server() < 0)
     {
       fprintf(stderr, "Errore nel'eliminazione del server\n");
       exit(EXIT_FAILURE);
     }
     exit(EXIT_SUCCESS);
   }
-  else{
-  //Codice Padre:
-  wait(&fid);
+  else
+  {
+    //Codice Padre:
+    wait(&fid);
   }
 }
-void esegui_programma()
+void esegui_programma(int format, char *filename, char *cmd)
 {
   char *msgtxt = malloc(sizeof(char) * 500);
+
+  stats(cmd, msgtxt, ",");
+
   msg message;
-
-  bool continua = TRUE;
-  while (continua == TRUE)
-  {
-    printf("\n> ");
-    long r = (long)fgets(msgtxt, MAXLEN, stdin);
-
-    // terminate logger
-    if (strstr(msgtxt, "exit") != NULL)
-    {
-      continua = FALSE;
-    }
-    if (strstr(msgtxt, "quit") != NULL)
-    {
-      message.type = TYPE_EXIT;
-      continua = FALSE;
-      send_msg(&message);
-    }
-    else
-    {
-      message.type = TYPE_TXT;
-      *(strchr(msgtxt,'\n'))='\0';
-      strcpy(message.msg_log.txt, msgtxt);
-      send_msg(&message);
-    }
-  }
+  strcpy(message.msg_log.txt, msgtxt);
+  strcpy(message.msg_log.fn, filename);
+  message.type = TYPE_CSV;
+  send_msg(&message);
   free(msgtxt);
 }
+/*
+void esegui_programma(int format, char *filename, char *cmd)
+{
+  //STOP THE DEAMON
+  msg message;
+  message.type = TYPE_EXIT;
+  send_msg(&message);
+}*/
