@@ -1,6 +1,6 @@
 #define OPERATOR (1)
 #define COMMAND (2)
-
+#define OPERATOR (1)
 
 int parse(char *cmd);
 int tokenize(char *cmd, int start, int finish);

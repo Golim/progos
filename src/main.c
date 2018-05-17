@@ -1,13 +1,3 @@
-#define ARG_TOO_FEW (-1)
-#define ARG_NOT_VALID_CMD (-2)
-#define ARG_DUP (-3)
-#define ARG_NOT_VALID_FN (-4)
-#define ARG_BAD_USAGE (-5)
-
-#define OK_STATUS (0)
-
-#define UNSET (-2147483648)
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -27,7 +17,7 @@ int format = UNSET;
 char filename[MAX_LEN_FN] = "";
 int arg_filename = UNSET;
 char cmd[MAX_LEN_CMD] = "";
-extern int run(int format, char *filename, char *cmd);
+
 int main(int argc, char **argv)
 {
   int r;
