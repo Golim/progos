@@ -1,5 +1,8 @@
-#define DEF_TXT ("/tmp/log.txt")
-#define DEF_CSV ("/tmp/log.csv")
+#ifndef LOGGER_h
+#define LOGGER_h
+
+#include "../util.h"
 
 int write_log(msg *m);
 int elaborate(msg *m);
+#endif

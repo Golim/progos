@@ -11,6 +11,9 @@
 #define TRUE 1
 #define FALSE 0
 
+#define DEF_TXT ("/tmp/log.txt")
+#define DEF_CSV ("/tmp/log.csv")
+
 #define TYPE_CSV (1)
 #define TYPE_TXT (2)
 #define TYPE_EXIT (3)

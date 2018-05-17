@@ -1,12 +1,9 @@
-#include <string.h>
-#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/msg.h>
-#include <errno.h>
 
 #include "./config.h"
 
@@ -20,7 +17,7 @@ key_t get_server_key()
   int i = ftok(EXTREF, EXTID);
   if (i < 0)
   {
-    fprintf(stderr, "Errore generazione chiave!\n");
+    fprintf(stderr, "Errore in generating key:[%d]\n", i);
   }
   return i;
 }
@@ -29,7 +26,7 @@ int init_server()
   server_queue = msgget(get_server_key(), IPC_CREAT | IPC_EXCL | 0777);
   if (server_queue < 0)
   {
-    printf("Errore in creazione coda [%d] %s\n", errno, strerror(errno));
+    fprintf(stderr, "Error in creating message queue: [%d] \n", errno);
     return -1;
   }
   return 0;
@@ -42,8 +39,7 @@ int start_listening()
   {
     if (msgrcv(server_queue, m, sizeof(struct msg) - sizeof(long), 0, 0) < 0)
     {
-      // EINVAL Invalid  msqid  value,  or  nonpositive  mtype value, or invalid msgsz value (less than 0 or greater than the system  value  MSG‐ MAX).
-      printf("Errore in lettura [%d] %s\n", errno, strerror(errno));
+      fprintf(stderr, "Error in reciving message [%d]\n", errno);
     }
     else
     {

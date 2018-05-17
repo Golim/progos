@@ -15,22 +15,19 @@ clean:
 	rm -f $(SRC)/*.gch
 
 ### MAIN ###
-main: main.o message_passing.o program.o logger.o stats.o bin
-	$(CC) $(BUILDING)/main.o $(BUILDING)/program.o $(BUILDING)/client.o $(BUILDING)/server.o $(BUILDING)/logger.o  $(BUILDING)/stats.o -o $(BIN)/main
+main: main.o message_passing.o program.o logger.o stats.o  parser.o bin
+	$(CC) $(BUILDING)/main.o $(BUILDING)/program.o $(BUILDING)/client.o $(BUILDING)/server.o $(BUILDING)/logger.o  $(BUILDING)/parser.o $(BUILDING)/stats.o -o $(BIN)/main
 
 main.o: building
 	$(CC) -c $(SRC)/main.c  -o $(BUILDING)/main.o
 
 ### STATS ###
-stats: stats.o   bin
-	$(CC) $(BUILDING)/stats.o -o $(BIN)/stats 
-
 stats.o: $(SRC)/stats/stats.c  building
 	$(CC) -c $(SRC)/stats/stats.c  -o $(BUILDING)/stats.o
 
-### LOGGER ###
-logger.o: $(SRC)/logger/logger.c  building
-	$(CC) -c $(SRC)/logger/logger.c -o $(BUILDING)/logger.o
+### PARSER ###
+parser.o: $(SRC)/parser/parser.c  building
+	$(CC) -c $(SRC)/parser/parser.c -o $(BUILDING)/parser.o
 
 ### Program ###
 program.o : $(SRC)/program/program.c building
@@ -40,6 +37,10 @@ program.o : $(SRC)/program/program.c building
 message_passing.o: $(SRC)/message_passing/client.c  $(SRC)/message_passing/server.c building
 	$(CC) -c $(SRC)/message_passing/client.c -o $(BUILDING)/client.o
 	$(CC) -c $(SRC)/message_passing/server.c -o $(BUILDING)/server.o
+
+### LOGGER ###
+logger.o: $(SRC)/logger/logger.c  building
+	$(CC) -c $(SRC)/logger/logger.c -o $(BUILDING)/logger.o
 
 ### MAKE DIRECTORIES ###
 bin:

@@ -2,13 +2,14 @@
 #define STATS_h
 
 #include "../util.h"
+#include "../config_output.h"
 
 // Const Value
-const long TIME_FACTOR = 1000000;
-const long COMMAND_MAX_LEN = 255;
-const long STATS_MAX_LEN = 500;
-const long SEP_MAX_LEN = 20;
-const long ARG_MAX_LEN = 255;
+#define TIME_FACTOR (1000000)
+#define COMMAND_MAX_LEN (255)
+#define STATS_MAX_LEN (500)
+#define SEP_MAX_LEN (20)
+#define ARG_MAX_LEN (255)
 
 // Functions
 int stats(char *cmd, char *stat, char *sep, bool mu, bool names);

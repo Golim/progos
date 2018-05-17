@@ -1,81 +1,74 @@
-#include <stdlib.h>
-#include <unistd.h>
 #include <stdio.h>
-#include <sys/types.h>
+#include <unistd.h>
 #include <string.h>
-#include <sys/wait.h>
-
+#include <stdlib.h>
 #include <sys/types.h>
-#include <sys/ipc.h>
-#include <sys/msg.h>
 
 #include "program.h"
 
 void genera_demone();
-void esegui_programma();
-
-int run(int format, char *filename, char *cmd, bool mu)
+extern int esegui_programma(char *);
+int run(char *cmd)
 {
   if (init_client() < 0)
   {
-    cond_print("[Demone non in ascolto]\n");
+    cond_print("[Daemon isn't running]\n");
     genera_demone();
   }
 
   if (init_client() == 0)
   {
-    cond_print("[Pronto per eseguire il programma]\n");
-    esegui_programma(format, filename, cmd, mu);
+    cond_print("[Ready for execution]\n");
+    esegui_programma(cmd);
   }
   else
   {
     //TODO: gestisci con codice di ritorno
-    fprintf(stderr, "Errore, non è stata creata la coda\n");
+    fprintf(stderr, "Error: daemon still not running\n");
+    return EXIT_FAILURE;
   }
   return 0;
 }
 
 void genera_demone()
 {
-  cond_print("[Generazione Demone]\n");
+  cond_print("[Generating Daemon]\n");
 
   pid_t fid = fork();
   if (fid < 0)
   {
-    fprintf(stderr, "Errore nella crezione del figlio\n");
+    fprintf(stderr, "Error in creating daemon proces\n");
     exit(EXIT_FAILURE);
   }
   else if (fid == 0)
   {
     if (init_server() < 0)
     {
-      fprintf(stderr, "Errore nella crezione della coda\n");
       exit(EXIT_FAILURE);
     }
     int r = daemon(1 - DAEMON_CH_DIR, 1 - DAEMON_CLOSE_OUT); //DA QUI IN POI é CODICE DEL DEMONE
     if (r < 0)
     {
-      fprintf(stderr, "Errore nella crezione del demone\n");
+      fprintf(stderr, "Error in creating daemon proces: [%d]\n", r);
       exit(EXIT_FAILURE);
     }
-    printf("[Demone lanciato: %d ] \n", getpid());
+    printf("[Daemon is running. Pid:%d ] \n", getpid());
     start_listening(); // Quando finisce di ascoltare deve eliminare la coda e terminare con successo!!
 
     if (delete_server() < 0)
     {
-      fprintf(stderr, "Errore nel'eliminazione del server\n");
+      fprintf(stderr, "Error in terminating daemon\n");
       exit(EXIT_FAILURE);
     }
-    cond_print("[Demone Terminato, eliminata coda!]\n");
+    cond_print("[Deamon killed, queue deleted]\n");
     exit(EXIT_SUCCESS);
   }
   else
   {
-    //Codice Padre:
     wait(&fid);
   }
 }
-void esegui_programma(int format, char *filename, char *cmd, bool mu)
+void esegui_e_logga(char *cmd)
 {
   //TODO: gestire invio file con percorso percorso assoluto e corrente
   char *msgtxt = malloc(sizeof(char) * MAX_LEN_STAT);
@@ -88,9 +81,9 @@ void esegui_programma(int format, char *filename, char *cmd, bool mu)
     message.type = format;
     cond_print("\n---\t output %s \t---\n", cmd);
     if (format == TYPE_CSV)
-      stats(cmd, msgtxt, " ,", mu);
+      stats(cmd, msgtxt, " ,", mu, TRUE);
     else if (format == TYPE_TXT)
-      stats(cmd, msgtxt, "\t", mu);
+      stats(cmd, msgtxt, "\t", mu, TRUE);
     cond_print("------------------------\n", cmd);
   }
 
@@ -104,7 +97,7 @@ void esegui_programma(int format, char *filename, char *cmd, bool mu)
   }
   else
   {
-    cond_print("[Messaggio di log inviato correttamente]\n");
+    cond_print("[Success in sending]\n");
   }
   free(msgtxt);
 }

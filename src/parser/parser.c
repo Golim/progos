@@ -19,22 +19,15 @@ int execute_and(int s1, int f1, int s2, int f2);
 int execute_or(int s1, int f1, int s2, int f2);
 int execute_pipe(int s1, int f1, int s2, int f2);
 
-int main(int argc, char const *argv[])
-{
-  char *cmd = malloc(255);
-  strcpy(cmd, argv[1]);
-  printf("BASH:\n");
-  system(argv[1]);
-  printf("\n\n");
-  printf("Parser:\n");
-  parse(cmd);
-  fflush(stdout);
+extern int esegui_e_logga(char *);
 
-  //printf("tks: %d \n", tks);
+int esegui_programma(char *cmd)
+{
+  parse(cmd);
   int n = execute(0, tks);
-  printf("Fine:[%d]\n", n);
   return 0;
 }
+
 int parse(char *cmd)
 {
   tokenize(cmd, 0, strlen(cmd) + 1);
@@ -45,7 +38,8 @@ int execute(int s, int f)
   //printf("%d %d \n", s, f);
   if (s == f)
   {
-    return system(tokens[s].value);
+    if(strlen(tokens[s].value)>0)
+    return esegui_e_logga(tokens[s].value);
   }
   else if (s < f)
   {
@@ -107,6 +101,7 @@ int execute(int s, int f)
 int tokenize(char *cmd, int s, int f)
 {
   int l;
+  int i;
   exp_token et;
   char tok[255];
   int start_word = -1;
@@ -115,7 +110,7 @@ int tokenize(char *cmd, int s, int f)
   int start_command = -1;
   int finish_command = -1;
 
-  for (int i = s; i < f; i++)
+  for (i = s; i < f; i++)
   {
     if (is_meta_character(cmd[i]) == -1)
     {
@@ -193,8 +188,8 @@ int is_control_operator(char *cmd, int i)
   strcpy(controloperator[8], ")");
   strcpy(controloperator[9], "|");
   strcpy(controloperator[0], "\n");
-
-  for (int j = 0; j < 10; j++)
+  int j;
+  for (j = 0; j < 10; j++)
   {
     if (controloperator[j][0] == cmd[i])
     {
@@ -298,4 +293,13 @@ int execute_pipe(int s1, int f1, int s2, int f2)
 
   //wait for all child to end
   return status;
+}
+
+int is_valid_command(char *cmd)
+{
+  return TRUE;
+}
+bool is_valid_filename(char *fn)
+{
+  return TRUE;
 }

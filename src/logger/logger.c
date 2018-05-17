@@ -1,27 +1,18 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <errno.h>
 #include <string.h>
-#include <unistd.h>
-#include <time.h>
-#include <sys/msg.h>
-#include <sys/ipc.h>
-#include <sys/wait.h>
 
-#include "../util.h"
 #include "./logger.h"
 
 int elaborate(msg *m)
 {
 	if (m->type == TYPE_EXIT)
 	{
-		printf("Exit message recived\n");
+		cond_print("[Daemon:'Exit message recived']\n");
 		return -1;
 	}
 	else
 	{
-		printf("[txt:%s , fn:%s]\n", m->msg_log.txt, m->msg_log.fn);
-		
+		cond_print("[txt:%s , fn:%s]\n", m->msg_log.txt, m->msg_log.fn);
 		return write_log(m);
 	}
 }
@@ -58,7 +49,7 @@ int write_log(msg *m)
 			fprintf(stderr, "Errore nell'apertura del file!: [%s]\n", m->msg_log.fn);
 			return -1;
 		}
-		printf("[stampato]:%s\n", m->msg_log.fn);
+		cond_print("[stampato]:%s\n", m->msg_log.fn);
 		fprintf(f, "%s\n", m->msg_log.txt);
 		fflush(f);
 		fclose(f);
