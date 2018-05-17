@@ -3,6 +3,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/wait.h>
+#include <sys/types.h>
 
 typedef char* string;
 
@@ -44,6 +46,7 @@ int execute_two_commands_piped(char* cmd1[], char *cmd2[])
     pid_t pid1, pid2; 
     int pipefd[2];  //bidirectional pipe
     pipe(pipefd);
+    int status;
 
     // save stdout and stdin
     int stdout_fd = dup(STDOUT_FILENO);
@@ -97,6 +100,9 @@ int execute_two_commands_piped(char* cmd1[], char *cmd2[])
     close(stdin_fd);
     close(stdout_fd);
 
+    //wait for all child to end
+    waitpid(-1, &status, 0);
+
 
     /* ****** FILE BASED ******
     //====== execute first command =======
@@ -125,7 +131,6 @@ int execute_two_commands_piped(char* cmd1[], char *cmd2[])
     system("rm /tmp/first_out.txt");
     ********************** */
 
-    fflush(stdout);
     return 0;
 }
 
