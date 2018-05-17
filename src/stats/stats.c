@@ -133,8 +133,14 @@ int main(int argc, char **argv)
 
 void send_to_logger(msg *m)
 {
-	printf("\n ------------------------------------ \n | %li | %s | %s | -->\n ------------------------------------\n", m->type, m->msg_log.txt, m->msg_log.fn);
-}
+	printf("\n\
+ ____________________________________________________________________________________________________________________________\n\
+ |msg_type| %li\n\
+ |log  msg| %s\n\
+ |log file| %s\n\
+ ____________________________________________________________________________________________________________________________\n",
+	m->type, m->msg_log.txt, m->msg_log.fn);
+}	
 
 int stats(char *cmd, char *stat, char *sep, bool mu, bool names)
 {
@@ -279,7 +285,8 @@ Example:  stats \"ls -al\"\n\n");
 	printf("%s","specifies the separator that appears between the fields.\n\
                                [v] can be a character or a string \n\
                                in quotes if it is composed only of spaces \n\
-                               or if it contains special characters(|, &..) . e.g. -s=\" | \"\n"); //Definire meglio gli special characters
+                               or if it contains special characters (|, &, ;, (, ) ...).\n\
+                               e.g. -s=\" | \"\n"); //Definire meglio gli special characters
 	
 	//-u --usage
 	printf("%10s","-u, ");
