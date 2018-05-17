@@ -1,3 +1,5 @@
+#ifndef PARSER_h
+#define PARSER_h
 #define OPERATOR (1)
 #define COMMAND (2)
 #define OPERATOR (1)
@@ -20,3 +22,5 @@ typedef struct exp_token
   int type;
   char value[50];
 } exp_token;
+
+#endif

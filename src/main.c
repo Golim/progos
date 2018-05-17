@@ -11,9 +11,12 @@ void print_usage();
 void print_help();
 
 int parse_argument(int argc, char **argv);
+int cond_print(const char * restrict format, ...);
 
 // CONFIG
 int format = UNSET;
+int verbose = UNSET;
+bool mu = UNSET;
 char filename[MAX_LEN_FN] = "";
 int arg_filename = UNSET;
 char cmd[MAX_LEN_CMD] = "";
@@ -29,7 +32,9 @@ int main(int argc, char **argv)
     exit(r);
   }
 
-  run(format, filename, cmd);
+  cond_print("Argomenti letti con successo\n");
+  cond_print("Eseguzione programma con: \n -format: %d \n -filename: %s\n -cmd: %s \n -mu: %d\n", format, filename, cmd, mu);
+  run(format, filename, cmd, mu);
   return 0;
 }
 
@@ -96,11 +101,39 @@ int parse_argument(int argc, char **argv)
           valido = TRUE;
         }
       }
+      else if (strcmp(option, "-measure-units") == 0 || strcmp(option, "-mu") == 0)
+      {
+        if (mu != UNSET)
+          return ARG_DUP;
+
+        if (strcmp(value, "true") == 0)
+        {
+          valido = TRUE;
+          mu = TRUE;
+        }
+        else if (strcmp(value, "false") == 0)
+        {
+          valido = TRUE;
+          format = FALSE;
+        }
+      }
     }
     else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
     {
       print_help();
       exit(EXIT_SUCCESS);
+    }
+    else if (strcmp(argv[i], "--verbose") == 0 || strcmp(argv[i], "-v") == 0)
+    {
+      if (verbose != UNSET)
+      {
+        return ARG_DUP;
+      }
+      else
+      {
+        verbose = TRUE;
+        valido = TRUE;
+      }
     }
     else if (i == argc - 1)
     {
@@ -120,6 +153,10 @@ int parse_argument(int argc, char **argv)
     //Initialize defaults:
     if (format == UNSET)
       format = TYPE_CSV;
+    if (verbose == UNSET)
+      verbose = TRUE;
+    if (mu == UNSET)
+      mu = TRUE;
     if (arg_filename == UNSET)
       if (format == TYPE_CSV)
         strcpy(filename, DEF_CSV);
@@ -130,24 +167,55 @@ int parse_argument(int argc, char **argv)
   }
   return OK_STATUS;
 }
+void print_usage()
+{
+  printf("Usage:  stats [OPTION]... [COMMAND]\n");
+  printf("Try 'stats --help' for more information.\n");
+}
+
 void print_help()
 {
-  printf("Usage:  stats [OPTION]...[COMMAND]\n");
+  printf("Usage:  stats [OPTION]... [COMMAND]\n");
   printf("Execute COMMAND , log various statistics in a file\n");
   printf("The command MUST be the last argument passed to stats");
-  printf("Example:  stats  ls \n");
+  printf("Example:  stats  ls \n"); //Aggiungere che se ci sono anche argomenti il comando va passato tra virgolette
   printf("\n");
 
   printf("-OPTION\n");
   printf("All OPTION are not mandatory. Contemplated options are:\n");
-  printf(" -h \t \t--help \t\t print this message\n");
-  printf(" -lf=[v]\t--logfile=[v]\t where [v] specifies the log file where stats will be appended\n");
-  printf(" -f=[v] \t--format=[v]\t specifies the format for the output. [v] can be 'csv' or 'txt'\n");
+
+  //-f --format
+  printf("%10s", "-f=[v], ");
+  printf("%-20s", "--format=[v]");
+  printf("%s", "specifies the format for the output. [v] can be 'csv' or 'txt'\n"); //Aggiungere default="txt"(??)
+
+  //-lf --logfile
+  printf("%10s", "-lf=[v], ");
+  printf("%-20s", "--logfile=[v]");
+  printf("%s", "where [v] specifies the log file where stats will be appended\n");
+
+  //-mu --measure-unit
+  printf("%10s", "-mu=[v], ");
+  printf("%-20s", "-measure-units=[v]");
+  printf("%s", "specifies whether the output should contain the unit of measurement. [v] can be 'true' or 'false'\n");
+
+  //-h --help
+  printf("%10s", "-h, ");
+  printf("%-20s", "--help");
+  printf("%s", "display this help and exit\n");
+
   printf("\n");
 }
 
-void print_usage()
+int cond_print(const char *restrict format, ...)
 {
-  printf("Usage:  stats [OPTION]...[COMMAND]\n");
-  printf("Try 'stats --help' for more information.\n");
+  if (verbose == TRUE)
+  {
+    va_list args;
+    va_start(args, format);
+    int ret = vprintf(format, args);
+    va_end(args);
+    return ret;
+  }
+  return 0;
 }

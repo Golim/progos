@@ -3,6 +3,7 @@
 
 #define MAXLEN 255
 
+
 #define MAX_LEN_FN (255)
 #define MAX_LEN_CMD (255)
 
@@ -23,7 +24,7 @@
 
 #define UNSET (-2147483648)
 
-
+#include <stdarg.h>
 
 typedef int bool;
 typedef char *string;
@@ -39,4 +40,8 @@ typedef struct msg
   long type;
   struct log msg_log;
 } msg;
+
+extern bool verbose;
+extern int cond_print(const char * restrict format, ...);
+
 #endif

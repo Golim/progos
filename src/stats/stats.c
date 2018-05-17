@@ -26,89 +26,9 @@ int mainaaa(int argc, char **argv)
 
 	strcpy(sep, ",");
 
-<<<<<<< HEAD
-	bool mu = TRUE;
-	
-	if (argc < 2)
-	{
-		print_usage();
-		exit(1);
-	}
-	else
-	{
-		// Il comando deve essere l'ultimo parametro.
-		strcpy(cmd, argv[argc - 1]);
-	}
-
-	for (i = 1, valido = TRUE; i < argc && valido == TRUE; i++)
-	{
-		char *option = "";
-		char *value = "";
-		valido = FALSE;
-		
-		if (index(argv[i], '=') != NULL)
-		{
-			//TODO controlla che le opzioni non siano già state impostate
-			//opzione=valore
-			option = strtok(argv[i], "=");
-			value = strtok(NULL, "");
-			
-			tolowercase(value);
-			
-			if (strcmp(option, "--format") == 0 || strcmp(option, "-f") == 0)
-			{
-				if (strcmp(value, "csv") == 0)
-					valido = TRUE;
-				else if (strcmp(value, "txt") == 0)
-				{
-					strcpy(sep, "\t");
-					valido = TRUE;
-					m->type = TYPE_TXT;
-				}
-				else
-					valido = 0;
-			}
-			else if (strcmp(option, "--logfile") == 0 || strcmp(option, "-lf") == 0)
-			{
-				if (strcmp(value, "") != 0)
-				{
-					valido = TRUE;
-					strcpy(m->msg_log.fn, value);
-				}
-			}
-			else if (strcmp(option, "--measure-units") == 0 || strcmp(option, "-mu") == 0)
-			{
-				if (strcmp(value, "false") == 0)
-				{
-					mu = FALSE;
-					valido = TRUE;
-				} else if(strcmp(value, "true") == 0){
-					mu = TRUE;
-					valido = TRUE;
-				}
-			}
-		}
-		else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
-		{
-			print_help();
-			exit(0);
-		}
-			
-		else if (i == argc - 1)
-			valido = TRUE;
-	}
-	if (valido == FALSE)
-	{
-		//Errore nella lettura di un argomento.
-		print_usage();
-		exit(1);
-	}
-
-=======
->>>>>>> parser
 	char *str = malloc(sizeof(char) * STATS_MAX_LEN);
 
-	stats(cmd, str, sep, mu);
+	stats(cmd, str, sep, TRUE);
 	strcpy(m->msg_log.txt, str);
 	send_to_logger(m);
 	free(m);
@@ -123,27 +43,26 @@ int stats(char *cmd, char *stat, char *sep, bool mu) //mu: stampa unità di misu
 {
 	int codice_ritorno;
 	long durata_realtime; //in ms
-	long durata_cputime; //in ms
+	long durata_cputime;	//in ms
 	char nome_comando[COMMAND_MAX_LEN];
 	char argomenti[ARG_MAX_LEN];
 
 	struct timespec clock_start_realtime;
 	struct timespec clock_start_cputime;
-	
+
 	struct timespec clock_finish_realtime;
 	struct timespec clock_finish_cputime;
 
 	separe_command_args(cmd, nome_comando, argomenti);
 
-	
-	clock_gettime(CLOCK_REALTIME, &clock_start_realtime);//Inizio realtime
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &clock_start_cputime);//Inizio CPUtime
+	clock_gettime(CLOCK_REALTIME, &clock_start_realtime);					 //Inizio realtime
+	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &clock_start_cputime); //Inizio CPUtime
 	//Esecuzione comando
 	codice_ritorno = system(cmd);
-	
+
 	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &clock_finish_cputime);
 	clock_gettime(CLOCK_REALTIME, &clock_finish_realtime);
-	
+
 	//Durata real-time
 	durata_realtime = (clock_finish_realtime.tv_sec - clock_start_realtime.tv_sec) * 1000 + (clock_finish_realtime.tv_nsec - clock_start_realtime.tv_nsec) / TIME_FACTOR;
 	//Durata CPU-time
@@ -153,20 +72,19 @@ int stats(char *cmd, char *stat, char *sep, bool mu) //mu: stampa unità di misu
 	strcat(stat, sep);
 	strcat(stat, argomenti);
 	strcat(stat, sep);
-	
-	if(mu == TRUE)
+
+	if (mu == TRUE)
 		sprintf(stat, "%s%lims", stat, durata_realtime);
 	else
 		sprintf(stat, "%s%li", stat, durata_realtime);
 
 	strcat(stat, sep);
-	
-	if(mu == TRUE)
+
+	if (mu == TRUE)
 		sprintf(stat, "%s%lius", stat, durata_cputime);
 	else
 		sprintf(stat, "%s%li", stat, durata_cputime);
 
-	
 	strcat(stat, sep);
 	sprintf(stat, "%s%d", stat, codice_ritorno);
 
@@ -193,53 +111,12 @@ int separe_command_args(char *cmd, char *name, char *arg)
 	}
 	return i;
 }
-<<<<<<< HEAD
 
-void tolowercase(char *s){
-	for(int i = 0; s[i]; i++){
-		if('A' <= s[i] && s[i] <= 'Z')
+void tolowercase(char *s)
+{
+	for (int i = 0; s[i]; i++)
+	{
+		if ('A' <= s[i] && s[i] <= 'Z')
 			s[i] = s[i] - ('A' - 'a');
 	}
 }
-
-void print_usage()
-{
-	printf("Usage:  stats [OPTION]... [COMMAND]\n");
-	printf("Try 'stats --help' for more information.\n");
-}
-
-void print_help()
-{
-	printf("Usage:  stats [OPTION]... [COMMAND]\n");
-	printf("Execute COMMAND , log various statistics in a file\n");
-	printf("The command MUST be the last argument passed to stats");
-	printf("Example:  stats  ls \n");//Aggiungere che se ci sono anche argomenti il comando va passato tra virgolette
-	printf("\n");
-
-	printf("-OPTION\n");
-	printf("All OPTION are not mandatory. Contemplated options are:\n");
-	
-	//-f --format
-	printf("%10s","-f=[v], ");
-	printf("%-20s","--format=[v]");
-	printf("%s","specifies the format for the output. [v] can be 'csv' or 'txt'\n"); //Aggiungere default="txt"(??)
-	
-	//-lf --logfile
-	printf("%10s","-lf=[v], ");
-	printf("%-20s","--logfile=[v]");
-	printf("%s","where [v] specifies the log file where stats will be appended\n");
-	
-	//-mu --measure-unit
-	printf("%10s","-mu=[v], ");
-	printf("%-20s","-measure-units=[v]");
-	printf("%s","specifies whether the output should contain the unit of measurement. [v] can be 'true' or 'false'\n");
-	
-	//-h --help
-	printf("%10s","-h, ");
-	printf("%-20s","--help");
-	printf("%s","display this help and exit\n");
-	
-	printf("\n");
-}
-=======
->>>>>>> parser

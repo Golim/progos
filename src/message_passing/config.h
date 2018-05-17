@@ -1,9 +1,7 @@
 #ifndef CONFIG_h
 #define CONFIG_h
 
-#ifndef UTIL_h
 #include "../util.h"
-#endif
 
 #define EXTREF "./"
 #define EXTID (100)

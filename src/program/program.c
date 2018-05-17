@@ -14,29 +14,30 @@
 void genera_demone();
 void esegui_programma();
 
-int run(int format, char *filename, char *cmd)
+int run(int format, char *filename, char *cmd, bool mu)
 {
   if (init_client() < 0)
   {
+    cond_print("[Demone non in ascolto]\n");
     genera_demone();
-    printf("[deamon generated]\n");
   }
 
   if (init_client() == 0)
   {
-    printf("[Pronto per eseguire il programma]\n");
-    esegui_programma(format, filename, cmd);
+    cond_print("[Pronto per eseguire il programma]\n");
+    esegui_programma(format, filename, cmd, mu);
   }
   else
   {
-    printf("[Errore, non è stata creata la coda]\n");
+    //TODO: gestisci con codice di ritorno
+    fprintf(stderr, "Errore, non è stata creata la coda\n");
   }
   return 0;
 }
 
 void genera_demone()
 {
-  printf("[starting deamon]\n");
+  cond_print("[Generazione Demone]\n");
 
   pid_t fid = fork();
   if (fid < 0)
@@ -46,8 +47,6 @@ void genera_demone()
   }
   else if (fid == 0)
   {
-    //Codice figlio:
-    printf("[Figlio]:%d \n", getpid());
     if (init_server() < 0)
     {
       fprintf(stderr, "Errore nella crezione della coda\n");
@@ -59,14 +58,15 @@ void genera_demone()
       fprintf(stderr, "Errore nella crezione del demone\n");
       exit(EXIT_FAILURE);
     }
-    printf("[Demone]:%d \n", getpid());
+    printf("[Demone lanciato: %d ] \n", getpid());
     start_listening(); // Quando finisce di ascoltare deve eliminare la coda e terminare con successo!!
-    printf("[Elimino la coda!]\n");
+
     if (delete_server() < 0)
     {
       fprintf(stderr, "Errore nel'eliminazione del server\n");
       exit(EXIT_FAILURE);
     }
+    cond_print("[Demone Terminato, eliminata coda!]\n");
     exit(EXIT_SUCCESS);
   }
   else
@@ -75,16 +75,26 @@ void genera_demone()
     wait(&fid);
   }
 }
-void esegui_programma(int format, char *filename, char *cmd)
+void esegui_programma(int format, char *filename, char *cmd, bool mu)
 {
+  //TODO: gestire invio file con percorso percorso assoluto e corrente
   char *msgtxt = malloc(sizeof(char) * 500);
-
-  stats(cmd, msgtxt, ",");
-
   msg message;
+
+  if (strcmp(cmd, "stop_daemon") == 0)
+    message.type = TYPE_EXIT;
+  else
+  {
+    message.type = format;
+
+    if (format == TYPE_CSV)
+      stats(cmd, msgtxt, " ,", mu);
+    else if (format == TYPE_TXT)
+      stats(cmd, msgtxt, "\t", mu);
+  }
+
   strcpy(message.msg_log.txt, msgtxt);
   strcpy(message.msg_log.fn, filename);
-  message.type = TYPE_CSV;
   send_msg(&message);
   free(msgtxt);
 }
