@@ -8,7 +8,6 @@
 #include <sys/msg.h>
 #include <errno.h>
 
-#include "../util.h"
 #include "./config.h"
 
 int server_queue;

@@ -21,6 +21,7 @@ int elaborate(msg *m)
 	else
 	{
 		printf("[txt:%s , fn:%s]\n", m->msg_log.txt, m->msg_log.fn);
+		
 		return write_log(m);
 	}
 }

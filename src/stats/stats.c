@@ -5,10 +5,9 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "../util.h"
 #include "stats.h"
 
-int main(int argc, char **argv)
+int mainaaa(int argc, char **argv)
 {
 	msg *m;
 	char cmd[COMMAND_MAX_LEN];
@@ -27,6 +26,7 @@ int main(int argc, char **argv)
 
 	strcpy(sep, ",");
 
+<<<<<<< HEAD
 	bool mu = TRUE;
 	
 	if (argc < 2)
@@ -104,6 +104,8 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
+=======
+>>>>>>> parser
 	char *str = malloc(sizeof(char) * STATS_MAX_LEN);
 
 	stats(cmd, str, sep, mu);
@@ -191,6 +193,7 @@ int separe_command_args(char *cmd, char *name, char *arg)
 	}
 	return i;
 }
+<<<<<<< HEAD
 
 void tolowercase(char *s){
 	for(int i = 0; s[i]; i++){
@@ -238,3 +241,5 @@ void print_help()
 	
 	printf("\n");
 }
+=======
+>>>>>>> parser

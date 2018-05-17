@@ -1,3 +1,10 @@
+#ifndef CONFIG_h
+#define CONFIG_h
+
+#ifndef UTIL_h
+#include "../util.h"
+#endif
+
 #define EXTREF "./"
 #define EXTID (100)
 
@@ -10,3 +17,4 @@ int delete_client();
 int init_server();
 int start_listening();
 int delete_server();
+#endif

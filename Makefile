@@ -3,7 +3,7 @@ SRC = src
 BUILDING = build
 BIN = bin
 
-build: stats | program
+build: main
 
 clean:
 	rm -Rf  $(BIN)/
@@ -11,6 +11,13 @@ clean:
 	rm -f ./log.txt
 	rm -f ./log.csv
 	rm -f $(SRC)/*.gch
+
+### MAIN ###
+main: main.o message_passing.o program.o logger.o stats.o bin
+	gcc $(BUILDING)/main.o $(BUILDING)/program.o $(BUILDING)/client.o $(BUILDING)/server.o $(BUILDING)/logger.o  $(BUILDING)/stats.o -o $(BIN)/main
+
+main.o: building
+	gcc -c $(SRC)/main.c  -o $(BUILDING)/main.o
 
 ### STATS ###
 stats: stats.o   bin
@@ -23,15 +30,12 @@ stats.o: $(SRC)/stats/stats.c  building
 logger.o: $(SRC)/logger/logger.c  building
 	gcc -c $(SRC)/logger/logger.c -o $(BUILDING)/logger.o
 
-### Mio_demone
-program: program.o bin mp.o logger.o
-	gcc $(BUILDING)/program.o $(BUILDING)/client.o  $(BUILDING)/server.o $(BUILDING)/logger.o -o $(BIN)/program 
-
+### Program ###
 program.o : $(SRC)/program/program.c building
 	gcc -c $(SRC)/program/program.c -o $(BUILDING)/program.o
 
 ### Message_passing
-mp.o: $(SRC)/message_passing/client.c  $(SRC)/message_passing/server.c building
+message_passing.o: $(SRC)/message_passing/client.c  $(SRC)/message_passing/server.c building
 	gcc -c $(SRC)/message_passing/client.c -o $(BUILDING)/client.o
 	gcc -c $(SRC)/message_passing/server.c -o $(BUILDING)/server.o
 
