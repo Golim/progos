@@ -52,7 +52,7 @@ void genera_demone()
       fprintf(stderr, "Errore nella crezione della coda\n");
       exit(EXIT_FAILURE);
     }
-    int r = daemon(0, 1); //DA QUI IN POI é CODICE DEL DEMONE
+    int r = daemon(1 - DAEMON_CH_DIR, 1 - DAEMON_CLOSE_OUT); //DA QUI IN POI é CODICE DEL DEMONE
     if (r < 0)
     {
       fprintf(stderr, "Errore nella crezione del demone\n");
@@ -78,7 +78,7 @@ void genera_demone()
 void esegui_programma(int format, char *filename, char *cmd, bool mu)
 {
   //TODO: gestire invio file con percorso percorso assoluto e corrente
-  char *msgtxt = malloc(sizeof(char) * 500);
+  char *msgtxt = malloc(sizeof(char) * MAX_LEN_STAT);
   msg message;
 
   if (strcmp(cmd, "stop_daemon") == 0)
@@ -86,23 +86,25 @@ void esegui_programma(int format, char *filename, char *cmd, bool mu)
   else
   {
     message.type = format;
-
+    cond_print("\n---\t output %s \t---\n", cmd);
     if (format == TYPE_CSV)
       stats(cmd, msgtxt, " ,", mu);
     else if (format == TYPE_TXT)
       stats(cmd, msgtxt, "\t", mu);
+    cond_print("------------------------\n", cmd);
   }
 
   strcpy(message.msg_log.txt, msgtxt);
   strcpy(message.msg_log.fn, filename);
-  send_msg(&message);
+
+  int r = send_msg(&message);
+  if (r < 0)
+  {
+    fprintf(stderr, "Errore nel'invio del log:[%d] \n", r);
+  }
+  else
+  {
+    cond_print("[Messaggio di log inviato correttamente]\n");
+  }
   free(msgtxt);
 }
-/*
-void esegui_programma(int format, char *filename, char *cmd)
-{
-  //STOP THE DEAMON
-  msg message;
-  message.type = TYPE_EXIT;
-  send_msg(&message);
-}*/

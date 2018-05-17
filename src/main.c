@@ -11,7 +11,7 @@ void print_usage();
 void print_help();
 
 int parse_argument(int argc, char **argv);
-int cond_print(const char * restrict format, ...);
+int cond_print(const char *format, ...);
 
 // CONFIG
 int format = UNSET;
@@ -33,11 +33,23 @@ int main(int argc, char **argv)
   }
 
   cond_print("Argomenti letti con successo\n");
-  cond_print("Eseguzione programma con: \n -format: %d \n -filename: %s\n -cmd: %s \n -mu: %d\n", format, filename, cmd, mu);
+  cond_print("Eseguzione programma con: \n -format: %s \n -filename: %s\n -cmd: %s \n -mu: %s\n", ftoa(format), filename, cmd, btoa(mu));
   run(format, filename, cmd, mu);
   return 0;
 }
-
+char *btoa(bool i)
+{
+  return i == TRUE ? "true" : "false";
+}
+char *ftoa(bool i)
+{
+  if (i == TYPE_CSV)
+    return "csv";
+  else if (i == TYPE_TXT)
+    return "txt";
+  else if (i == TYPE_EXIT)
+    return "exit";
+}
 int parse_argument(int argc, char **argv)
 {
   bool valido = TRUE;
@@ -59,7 +71,8 @@ int parse_argument(int argc, char **argv)
   }
 
   valido = TRUE;
-  for (int i = 1; i < argc && valido == TRUE; i++)
+  int i;
+  for (i = 1; i < argc && valido == TRUE; i++)
   {
     valido = FALSE;
 
@@ -114,7 +127,7 @@ int parse_argument(int argc, char **argv)
         else if (strcmp(value, "false") == 0)
         {
           valido = TRUE;
-          format = FALSE;
+          mu = FALSE;
         }
       }
     }
@@ -154,7 +167,7 @@ int parse_argument(int argc, char **argv)
     if (format == UNSET)
       format = TYPE_CSV;
     if (verbose == UNSET)
-      verbose = TRUE;
+      verbose = FALSE;
     if (mu == UNSET)
       mu = TRUE;
     if (arg_filename == UNSET)
@@ -199,6 +212,11 @@ void print_help()
   printf("%-20s", "-measure-units=[v]");
   printf("%s", "specifies whether the output should contain the unit of measurement. [v] can be 'true' or 'false'\n");
 
+  //-v --verbose
+  printf("%10s", "-v, ");
+  printf("%-20s", "--verbose");
+  printf("%s", "specifies whether to print verbose output'\n");
+
   //-h --help
   printf("%10s", "-h, ");
   printf("%-20s", "--help");
@@ -207,7 +225,7 @@ void print_help()
   printf("\n");
 }
 
-int cond_print(const char *restrict format, ...)
+int cond_print(const char *format, ...)
 {
   if (verbose == TRUE)
   {

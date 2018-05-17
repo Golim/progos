@@ -6,6 +6,7 @@
 
 #define MAX_LEN_FN (255)
 #define MAX_LEN_CMD (255)
+#define MAX_LEN_STAT (500)
 
 #define TRUE 1
 #define FALSE 0
@@ -42,6 +43,7 @@ typedef struct msg
 } msg;
 
 extern bool verbose;
-extern int cond_print(const char * restrict format, ...);
-
+extern int cond_print(const char *format, ...);
+extern char *btoa(bool i);
+extern char *ftoa(bool i);
 #endif

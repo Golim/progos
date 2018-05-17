@@ -114,7 +114,8 @@ int separe_command_args(char *cmd, char *name, char *arg)
 
 void tolowercase(char *s)
 {
-	for (int i = 0; s[i]; i++)
+	int i;
+	for (i = 0; s[i]; i++)
 	{
 		if ('A' <= s[i] && s[i] <= 'Z')
 			s[i] = s[i] - ('A' - 'a');

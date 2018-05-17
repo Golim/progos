@@ -27,7 +27,6 @@ int init_client()
   client_queue = msgget(get_client_key(), 0666);
   if (client_queue < 0)
   {
-    printf("Coda non esistente: [%d] %s\n", errno, strerror(errno));
     return (-1);
   }
   return 0;
@@ -42,11 +41,7 @@ int send_msg(msg *m)
   if (msgsnd(client_queue, m, sizeof(struct msg) - sizeof(long), 0) < 0)
   {
     // EINVAL Invalid  msqid  value,  or  nonpositive  mtype value, or invalid msgsz value (less than 0 or greater than the system  value  MSG‐ MAX).
-    printf("Errore in invio [%d] %s\n", errno, strerror(errno));
-  }
-  else
-  {
-    printf("[Inviato]\n");
+    fprintf(stderr, "Errore in invio [%d] %s\n", errno, strerror(errno));
   }
   return 0;
 }

@@ -2,46 +2,107 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
+#include "parser.h"
 char controloperator[10][3];
 
 exp_token tokens[50];
 int tks = 0;
+
 void add_token(exp_token t);
+bool is_unary_operator(char *op);
+int execute(int s, int f);
+int execute_and(int s1, int f1, int s2, int f2);
+int execute_or(int s1, int f1, int s2, int f2);
+int execute_pipe(int s1, int f1, int s2, int f2);
 
 int main(int argc, char const *argv[])
 {
   char *cmd = malloc(255);
   strcpy(cmd, argv[1]);
+  printf("BASH:\n");
   system(argv[1]);
+  printf("\n\n");
+  printf("Parser:\n");
   parse(cmd);
-  printf("\n");
+  fflush(stdout);
+
+  //printf("tks: %d \n", tks);
+  int n = execute(0, tks);
+  printf("Fine:[%d]\n", n);
   return 0;
 }
 int parse(char *cmd)
 {
   tokenize(cmd, 0, strlen(cmd) + 1);
-
-  for (int i = 0; i < tks; i++)
-  {
-    if (tokens[i].type == COMMAND)
-    {
-      printf("C:[%s]  ", tokens[i].value);
-    }
-    else if (tokens[i].type == OPERATOR)
-    {
-      printf("Op:[%s]  ", tokens[i].value);
-    }
-  }
 }
 
-int execute(int s, int finish)
+int execute(int s, int f)
 {
-  int i = s;
-  if(i < finish)
+  //printf("%d %d \n", s, f);
+  if (s == f)
   {
-
+    return system(tokens[s].value);
   }
+  else if (s < f)
+  {
+    if (tokens[s].type == COMMAND)
+    {
+      int i = s + 1;
+      if (tokens[i].type == COMMAND)
+        return -1;
+      if (is_unary_operator(tokens[i].value) == TRUE || s == tks - 1)
+      {
+        if (i + 1 >= f)
+          return execute(s, s);
+        else
+        {
+          execute(s, s);
+          return execute(i + 1, f);
+        }
+      }
+      else
+      {
+        int j = i + 1;
+        while (j <= f && !(is_unary_operator(tokens[i].value) == TRUE || j == tks - 1))
+          j++;
+        if (strcmp(tokens[i].value, "&&") == 0)
+        {
+          if (j == f && j + 1 <= tks)
+            return execute_and(s, i - 1, i + 1, f);
+          else
+          {
+            execute_and(s, i - 1, i + 1, j);
+            return execute(j + 1, f);
+          }
+        }
+        if (strcmp(tokens[i].value, "||") == 0)
+        {
+          if (j == f && j + 1 <= tks)
+            return execute_or(s, i - 1, i + 1, f);
+          else
+          {
+            execute_or(s, i - 1, i + 1, j);
+            return execute(j + 1, f);
+          }
+        }
+        if (strcmp(tokens[i].value, "|") == 0)
+        {
+          if (j == f && j + 1 <= tks)
+            return execute_pipe(s, i - 1, i + 1, f);
+          else
+          {
+            execute_pipe(s, i - 1, i + 1, j);
+            return execute(j + 1, f);
+          }
+        }
+      }
+    }
+  }
+  return -1;
 }
 int tokenize(char *cmd, int s, int f)
 {
@@ -96,7 +157,7 @@ int tokenize(char *cmd, int s, int f)
         et.type = OPERATOR;
         strcpy(et.value, controloperator[l]);
         add_token(et);
-        i+=strlen(controloperator[l])-1;
+        i += strlen(controloperator[l]) - 1;
       }
     }
   }
@@ -106,6 +167,18 @@ void add_token(exp_token t)
 {
   tokens[tks] = t;
   tks++;
+}
+
+bool is_unary_operator(char *op)
+{
+  if (strcmp(op, ";;") == 0)
+    return TRUE;
+  if (strcmp(op, ";") == 0)
+    return TRUE;
+  if (strcmp(op, "\n") == 0)
+    return TRUE;
+
+  return FALSE;
 }
 
 int is_control_operator(char *cmd, int i)
@@ -137,8 +210,92 @@ int is_control_operator(char *cmd, int i)
 int is_meta_character(char c)
 {
   char *metacharacter = "|&;() \t";
-  if(index(metacharacter,c)== NULL)
+  if (index(metacharacter, c) == NULL)
     return -1;
   else
     return c;
+}
+
+/*
+execute 2 commands between and
+return: 
+    -1 -> something went wrong
+    0 -> everything ok
+*/
+int execute_and(int s1, int f1, int s2, int f2)
+{
+  if (execute(s1, f1) == 0)
+    return execute(s2, f2);
+  else
+    return -1;
+  return 0;
+}
+
+/*
+execute 2 commands between or
+return: 
+    2 -> both commands went wrong
+    0 -> at least one command run successfully
+*/
+int execute_or(int s1, int f1, int s2, int f2)
+{
+  // lazy evaluation
+  if (execute(s1, f1) == 0)
+    return 0;
+
+  if (execute(s2, f2) == 0)
+    return 0;
+
+  return 2;
+}
+
+/*
+execute 2 commands between pipe
+return: 
+    -1 -> something went wrong
+    0 -> everything ok
+*/
+int execute_pipe(int s1, int f1, int s2, int f2)
+{
+  //== create two process and make them comunicate using a pipe
+  pid_t p;
+  int pipefd[2];
+  pipe(pipefd);
+  int status;
+
+  // save stdout and stdin
+  int stdout_fd = dup(STDOUT_FILENO);
+  int stdin_fd = dup(STDIN_FILENO);
+
+  p = fork();
+  if (p < 0)
+    return -1;
+  else if (p > 0)
+  {
+    //Esegui 1:
+    dup2(pipefd[1], STDOUT_FILENO); // sposta stdout
+    close(pipefd[0]);
+    int r = execute(s1, f1); //esegui
+    dup2(stdout_fd, 1);      //ripristina stdout
+  }
+  else
+  {
+    //Esegui 2
+    dup2(pipefd[0], STDIN_FILENO); //Sposta stdin
+    close(pipefd[1]);
+    int s = execute(s2, f2); //esegui
+    dup2(stdin_fd, 0);
+    exit(s);
+  }
+  //restore stdin and stdout
+  close(pipefd[0]);
+  close(pipefd[1]);
+
+  close(stdin_fd);
+  close(stdout_fd);
+
+  waitpid(-1, &status, 0);
+
+  //wait for all child to end
+  return status;
 }

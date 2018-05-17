@@ -4,6 +4,8 @@
 #define COMMAND (2)
 #define OPERATOR (1)
 
+#include "../util.h"
+
 int parse(char *cmd);
 int tokenize(char *cmd, int start, int finish);
 int is_control_operator(char *cmd, int i);
