@@ -9,3 +9,7 @@ In program.c
 
 Documentazione:
   Cosa fare se specifico sia sep eche type??!?!?
+
+2) BUGS:
+  -non prende comandi con opzioni!
+  - se non esiste il loggile, crearlo prima di chiamare realpath.

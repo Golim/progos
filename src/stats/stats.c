@@ -10,6 +10,7 @@ int statos(char *cmd, char *stat, char *sep, bool mu, bool names)
 }
 int stats(char *cmd, char *stat, char *sep, bool mu, bool names)
 {
+	strcpy(stat,"");
 	int codice_ritorno;
 	long durata_realtime; //in ms
 	long durata_cputime;	//in ms
@@ -65,8 +66,8 @@ int stats(char *cmd, char *stat, char *sep, bool mu, bool names)
 	strcat(stat, sep);
 	if (names == TRUE)
 		sprintf(stat, "%s[return_code]", stat);
-	strcat(stat, sep);
 	sprintf(stat, "%s%d", stat, codice_ritorno);
+
 
 	return 0;
 }

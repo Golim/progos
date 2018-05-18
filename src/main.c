@@ -3,6 +3,8 @@
 #include <string.h>
 #include <stdarg.h>
 
+#include <errno.h>
+
 #include "./util.h"
 #include "config_output.h"
 #include "./parser/parser.h"
@@ -24,7 +26,6 @@ int verbose = UNSET;
 bool mu = UNSET;
 
 char cmd[MAX_LEN_CMD] = "";
-
 
 extern int is_valid_command(char *cmd);
 extern bool is_valid_filename(char *fn);
@@ -127,13 +128,13 @@ int parse_argument(int argc, char **argv)
           if (arg_sep != UNSET)
             return ARG_DUP;
           else if (strcmp(value, "") != 0)
-          {
+
             strcpy(sep, value);
-            valido = TRUE;
-          }
+          valido = TRUE;
         }
       }
     }
+
     else if (strcmp(argv[i], "--names") == 0 || strcmp(argv[i], "-n") == 0)
     {
       if (names != UNSET)
@@ -173,7 +174,7 @@ int parse_argument(int argc, char **argv)
   {
     return ARG_BAD_USAGE;
   }
-  if(strlen(cmd)== 0)
+  if (strlen(cmd) == 0)
     return ARG_NOT_VALID_CMD;
   set_config_defaults();
   return OK_STATUS;
@@ -203,6 +204,14 @@ void set_config_defaults()
       strcpy(sep, " , ");
     else if (format == TYPE_TXT)
       strcpy(filename, "\t");
+
+  char *abs_path = NULL;
+  printf("REL_PATH: '%s'\n", filename);
+  abs_path = realpath(filename, NULL);
+  printf("ABS_PATH: '%s' [%d] %s\n", abs_path, errno, strerror(errno));
+  if (abs_path != NULL && strlen(abs_path) > 0)
+    strcpy(filename, abs_path);
+  free(abs_path);
   arg_sep = TRUE;
   arg_filename = TRUE;
 }
