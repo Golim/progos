@@ -1,8 +1,9 @@
-#ifndef CONFIG_h
-#define CONFIG_h
+#ifndef MSG_PASSING_h
+#define CONFIMSG_PASSING_hG_h
 
-#include "../util.h"
+#include "../util/util.h"
 
+//TODO: VA bene questo oppure bisogna cambiare?!
 #define EXTREF "./"
 #define EXTID (100)
 
@@ -15,4 +16,5 @@ int delete_client();
 int init_server();
 int start_listening();
 int delete_server();
+
 #endif

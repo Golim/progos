@@ -6,31 +6,32 @@
 
 #include "program.h"
 
-void genera_demone();
-extern int esegui_programma(char *);
-int run(char *cmd)
+void generate_daemon();
+
+int run_program(char *cmd)
 {
   if (init_client() < 0)
   {
     cond_print("[Daemon isn't running]\n");
-    genera_demone();
+    generate_daemon();
   }
 
-  if (init_client() == 0)
+  if (init_client() == OK_STATUS)
   {
     cond_print("[Ready for execution]\n");
+    cond_print("\n---\t output %s \t---\n", cmd);
     esegui_programma(cmd);
+    cond_print("------------------------\n", cmd);
   }
   else
   {
-    //TODO: gestisci con codice di ritorno
     fprintf(stderr, "Error: daemon still not running\n");
     return EXIT_FAILURE;
   }
-  return 0;
+  return OK_STATUS;
 }
 
-void genera_demone()
+void generate_daemon()
 {
   cond_print("[Generating Daemon]\n");
 
@@ -42,7 +43,7 @@ void genera_demone()
   }
   else if (fid == 0)
   {
-    if (init_server() < 0)
+    if (init_server() == FAIL_STATUS)
     {
       exit(EXIT_FAILURE);
     }
@@ -70,7 +71,6 @@ void genera_demone()
 }
 void esegui_e_logga(char *cmd)
 {
-  //TODO: gestire invio file con percorso percorso assoluto e corrente
   char *msgtxt = malloc(sizeof(char) * MAX_LEN_STAT);
   msg message;
 
@@ -79,12 +79,7 @@ void esegui_e_logga(char *cmd)
   else
   {
     message.type = format;
-    cond_print("\n---\t output %s \t---\n", cmd);
-    if (format == TYPE_CSV)
-      stats(cmd, msgtxt, " ,", mu, TRUE);
-    else if (format == TYPE_TXT)
-      stats(cmd, msgtxt, "\t", mu, TRUE);
-    cond_print("------------------------\n", cmd);
+    stats(cmd, msgtxt, sep, mu, names);
   }
 
   strcpy(message.msg_log.txt, msgtxt);
@@ -95,9 +90,6 @@ void esegui_e_logga(char *cmd)
   {
     fprintf(stderr, "Errore nel'invio del log:[%d] \n", r);
   }
-  else
-  {
-    cond_print("[Success in sending]\n");
-  }
+
   free(msgtxt);
 }

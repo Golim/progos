@@ -2,12 +2,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+
 #include "stats.h"
 
-int statos(char *cmd, char *stat, char *sep, bool mu, bool names)
-{
-	printf("a: '%s' \n\n",cmd);
-}
 int stats(char *cmd, char *stat, char *sep, bool mu, bool names)
 {
 	strcpy(stat,"");
@@ -70,24 +67,4 @@ int stats(char *cmd, char *stat, char *sep, bool mu, bool names)
 
 
 	return 0;
-}
-
-int separe_command_args(char *cmd, char *name, char *arg)
-{
-	int i = 0;
-	char *tmp;
-	//TODO: implementa caso specale, tipo PIPE etc...
-	strcpy(arg, "");
-	tmp = strtok(cmd, " ");
-	strcpy(name, tmp);
-	tmp = strtok(NULL, " ");
-	while (tmp != NULL)
-	{
-		i++;
-		if (strlen(arg) > 0)
-			strcat(arg, " ");
-		strcat(arg, tmp);
-		tmp = strtok(NULL, " ");
-	}
-	return i;
 }

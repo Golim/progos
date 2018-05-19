@@ -3,12 +3,14 @@
 
 #include "./logger.h"
 
+int write_log(msg *m);
+
 int elaborate(msg *m)
 {
 	if (m->type == TYPE_EXIT)
 	{
 		cond_print("[Daemon:'Exit message recived']\n");
-		return -1;
+		return STOP_STATUS;
 	}
 	else
 	{
@@ -19,6 +21,7 @@ int elaborate(msg *m)
 
 int write_log(msg *m)
 {
+	int res;
 	FILE *f;
 	switch (m->type)
 	{
@@ -34,9 +37,7 @@ int write_log(msg *m)
 		break;
 
 	default:
-		//TODO: gestisci tipo non riconosciuto!!
-		if (strlen(m->msg_log.fn) == 0)
-			strcpy(m->msg_log.fn, DEF_TXT);
+		return ERR_TYPE_NOT_SUPPORTED;
 		break;
 	}
 
@@ -47,12 +48,12 @@ int write_log(msg *m)
 		{
 			//TODO: Gestisci errore
 			fprintf(stderr, "Errore nell'apertura del file!: [%s]\n", m->msg_log.fn);
-			return -1;
+			return ERR_CANNOT_WRITE_FILE;
 		}
 		cond_print("[stampato]:%s\n", m->msg_log.fn);
 		fprintf(f, "%s\n", m->msg_log.txt);
 		fflush(f);
 		fclose(f);
 	}
-	return 0;
+	return OK_STATUS;
 }

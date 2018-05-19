@@ -5,7 +5,7 @@
 #include <sys/ipc.h>
 #include <fcntl.h>
 
-#include "./config.h"
+#include "./msg_passing.h"
 
 int server_queue;
 
@@ -27,10 +27,11 @@ int init_server()
   if (server_queue < 0)
   {
     fprintf(stderr, "Error in creating message queue: [%d] \n", errno);
-    return -1;
+    return FAIL_STATUS;
   }
-  return 0;
+  return OK_STATUS;
 }
+
 int start_listening()
 {
   struct msg *m = malloc(sizeof(struct msg));
@@ -43,12 +44,12 @@ int start_listening()
     }
     else
     {
-      if (elaborate(m) == -1)
+      if (elaborate(m) == STOP_STATUS)
         continua = FALSE;
     }
   }
   free(m);
-  return 0;
+  return OK_STATUS;
 }
 
 int delete_server()

@@ -5,7 +5,7 @@
 
 #include <errno.h>
 
-#include "./util.h"
+#include "./util/util.h"
 #include "config_output.h"
 #include "./parser/parser.h"
 
@@ -16,19 +16,16 @@ int parse_argument(int argc, char **argv);
 void set_config_defaults();
 int cond_print(const char *format, ...);
 
+char cmd[MAX_LEN_CMD] = "";
+
 bool arg_filename = UNSET;
 char filename[MAX_LEN_FN] = "";
 bool names = UNSET;
 int arg_sep = UNSET;
 char sep[10] = "";
-int format = UNSET; // {txt | csv}
+int format = UNSET;
 int verbose = UNSET;
 bool mu = UNSET;
-
-char cmd[MAX_LEN_CMD] = "";
-
-extern int is_valid_command(char *cmd);
-extern bool is_valid_filename(char *fn);
 
 int main(int argc, char **argv)
 {
@@ -41,9 +38,8 @@ int main(int argc, char **argv)
     exit(r);
   }
 
-  cond_print("[Reading Argument Success]\n");
-  cond_print("[Runing program with parameters]: \n -format: %s \n -filename: %s\n -cmd: %s \n -mu: %s\n", ftoa(format), filename, cmd, btoa(mu));
-  run(cmd);
+  cond_print("[Running program with parameters]: \n -format: %s \n -filename: %s\n -cmd: %s \n -mu: %s\n -sep: %s \n", ftoa(format), filename, cmd, btoa(mu), sep);
+  run_program(cmd);
   return 0;
 }
 
@@ -57,13 +53,10 @@ int parse_argument(int argc, char **argv)
 
   //Troppi pochi argomenti
   if (argc < 2)
-  {
     return ARG_TOO_FEW;
-  }
   if (is_valid_command(argv[argc - 1]))
-  {
     strcpy(cmd, argv[argc - 1]);
-  }
+
   for (i = 1; i < argc && valido == TRUE; i++)
   {
     valido = FALSE;
@@ -78,6 +71,9 @@ int parse_argument(int argc, char **argv)
         {
           if (format != UNSET)
             return ARG_DUP;
+
+          if (arg_sep != UNSET)
+            return ARG_BAD_USAGE;
 
           if (strcmp(value, "csv") == 0)
           {
@@ -127,9 +123,16 @@ int parse_argument(int argc, char **argv)
         {
           if (arg_sep != UNSET)
             return ARG_DUP;
-          else if (strcmp(value, "") != 0)
 
+          if (format != UNSET)
+            return ARG_BAD_USAGE;
+
+          else if (strcmp(value, "") != 0)
+          {
             strcpy(sep, value);
+            format = TYPE_TXT;
+            arg_sep = TYPE_TXT;
+          }
           valido = TRUE;
         }
       }
@@ -148,6 +151,11 @@ int parse_argument(int argc, char **argv)
     else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
     {
       print_help();
+      exit(EXIT_SUCCESS);
+    }
+    else if (strcmp(argv[i], "--usage") == 0 || strcmp(argv[i], "-u") == 0)
+    {
+      print_usage();
       exit(EXIT_SUCCESS);
     }
     else if (strcmp(argv[i], "--verbose") == 0 || strcmp(argv[i], "-v") == 0)
@@ -203,14 +211,16 @@ void set_config_defaults()
     if (format == TYPE_CSV)
       strcpy(sep, " , ");
     else if (format == TYPE_TXT)
-      strcpy(filename, "\t");
+      strcpy(sep, "\t");
+
+  if (names == UNSET)
+    names = FALSE;
 
   char *abs_path = NULL;
-  printf("REL_PATH: '%s'\n", filename);
   abs_path = realpath(filename, NULL);
-  printf("ABS_PATH: '%s' [%d] %s\n", abs_path, errno, strerror(errno));
   if (abs_path != NULL && strlen(abs_path) > 0)
     strcpy(filename, abs_path);
+
   free(abs_path);
   arg_sep = TRUE;
   arg_filename = TRUE;
@@ -271,31 +281,4 @@ Example:  stats \"ls -al\"\n\n");
   printf("%s", "give a short usage message\n");
 
   printf("\n");
-}
-
-int cond_print(const char *format, ...)
-{
-  if (verbose == TRUE)
-  {
-    va_list args;
-    va_start(args, format);
-    int ret = vprintf(format, args);
-    va_end(args);
-    return ret;
-  }
-  return 0;
-}
-
-char *btoa(bool i)
-{
-  return i == TRUE ? "true" : "false";
-}
-char *ftoa(bool i)
-{
-  if (i == TYPE_CSV)
-    return "csv";
-  else if (i == TYPE_TXT)
-    return "txt";
-  else if (i == TYPE_EXIT)
-    return "exit";
 }

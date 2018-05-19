@@ -15,8 +15,8 @@ clean:
 	rm -f $(SRC)/*.gch
 
 ### MAIN ###
-main: main.o message_passing.o program.o logger.o stats.o  parser.o bin
-	$(CC) $(BUILDING)/main.o $(BUILDING)/program.o $(BUILDING)/client.o $(BUILDING)/server.o $(BUILDING)/logger.o  $(BUILDING)/parser.o $(BUILDING)/stats.o -o $(BIN)/main
+main: main.o message_passing.o program.o logger.o stats.o  parser.o util.o bin 
+	$(CC) $(BUILDING)/main.o $(BUILDING)/util.o $(BUILDING)/program.o $(BUILDING)/client.o $(BUILDING)/server.o $(BUILDING)/logger.o  $(BUILDING)/parser.o $(BUILDING)/stats.o  -o $(BIN)/main
 
 main.o: building
 	$(CC) -c $(SRC)/main.c  -o $(BUILDING)/main.o
@@ -41,6 +41,10 @@ message_passing.o: $(SRC)/message_passing/client.c  $(SRC)/message_passing/serve
 ### LOGGER ###
 logger.o: $(SRC)/logger/logger.c  building
 	$(CC) -c $(SRC)/logger/logger.c -o $(BUILDING)/logger.o
+
+### UTIL ###
+util.o: $(SRC)/util/util.c  building
+	$(CC) -c $(SRC)/util/util.c -o $(BUILDING)/util.o
 
 ### MAKE DIRECTORIES ###
 bin:

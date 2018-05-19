@@ -2,7 +2,8 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/ipc.h>
-#include "config.h"
+
+#include "./msg_passing.h"
 
 int client_queue = -1;
 
@@ -11,7 +12,7 @@ key_t get_client_key()
   int i = ftok(EXTREF, EXTID);
   if (i < 0)
   {
-    fprintf(stderr, "Errore in generating key:[%d]\n", i);
+    fprintf(stderr, "Error in generating key:[%d]\n", i);
   }
   return i;
 }
@@ -21,9 +22,9 @@ int init_client()
   client_queue = msgget(get_client_key(), 0666);
   if (client_queue < 0)
   {
-    return (-1);
+    return FAIL_STATUS;
   }
-  return 0;
+  return OK_STATUS;
 }
 
 int send_msg(msg *m)

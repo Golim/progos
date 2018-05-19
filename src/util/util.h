@@ -3,7 +3,6 @@
 
 #define MAXLEN 255
 
-
 #define MAX_LEN_FN (255)
 #define MAX_LEN_CMD (255)
 #define MAX_LEN_STAT (500)
@@ -24,11 +23,14 @@
 #define ARG_NOT_VALID_FN (-4)
 #define ARG_BAD_USAGE (-5)
 
+#define ERR_TYPE_NOT_SUPPORTED (-2)
+#define ERR_CANNOT_WRITE_FILE (-1)
+
 #define OK_STATUS (0)
+#define FAIL_STATUS (-1)
+#define STOP_STATUS (10)
 
 #define UNSET (-2147483648)
-
-#include <stdarg.h>
 
 typedef int bool;
 typedef char *string;
@@ -45,8 +47,8 @@ typedef struct msg
   struct log msg_log;
 } msg;
 
-extern bool verbose;
-extern int cond_print(const char *format, ...);
-extern char *btoa(bool i);
-extern char *ftoa(bool i);
+char *btoa(bool i);
+char *ftoa(bool i);
+int cond_print(const char *format, ...);
+
 #endif

@@ -1,7 +1,7 @@
 #ifndef STATS_h
 #define STATS_h
 
-#include "../util.h"
+#include "../util/util.h"
 #include "../config_output.h"
 
 // Const Value
@@ -13,10 +13,6 @@
 
 // Functions
 int stats(char *cmd, char *stat, char *sep, bool mu, bool names);
-int separe_command_args(char *cmd, char *name, char *arg);
 void send_to_logger(msg *m);
-void print_usage();
-void print_help();
-void tolowercase(char *s);
 
 #endif

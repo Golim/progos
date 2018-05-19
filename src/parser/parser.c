@@ -5,6 +5,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 #include "parser.h"
 char controloperator[10][3];
@@ -38,8 +39,8 @@ int execute(int s, int f)
   //printf("%d %d \n", s, f);
   if (s == f)
   {
-    if(strlen(tokens[s].value)>0)
-    return esegui_e_logga(tokens[s].value);
+    if (strlen(tokens[s].value) > 0)
+      return esegui_e_logga(tokens[s].value);
   }
   else if (s < f)
   {
@@ -98,6 +99,62 @@ int execute(int s, int f)
   }
   return -1;
 }
+
+int separe_command_args(char *cmd, char *name, char *arg)
+{
+  printf("separe_command_args\n");
+	int wc = 0;
+  int i;
+	int l=0;
+
+	int start_word=-1;
+	int finish_word=-1;
+  strcpy(name,"");
+  strcpy(arg,"");
+	
+	for (i = 0 ; i <= strlen(cmd) ; i++)
+  {
+    printf("i: %d '%c')",cmd[i],cmd[i]);
+    if (is_meta_character(cmd[i]) == -1)
+    {
+      printf(" no META\n");
+      //NON é UN SEPARATORE
+      if (start_word < 0)
+        start_word = i;
+    }
+    else
+    {
+      printf(" META \n");
+      if (start_word >= 0)
+      {
+        finish_word = i;
+				if(wc == 0)
+				{
+					//la prima parola è il nome comando
+          printf("[copio nome]\n");
+					strncpy(name, cmd + start_word, finish_word - start_word);
+        	name[finish_word - start_word] = '\0';
+				}
+				else
+				{
+					//sono argomenti
+          if (wc  > 1)
+				  	strcat(arg, " ");
+
+					l = strlen(arg);
+					strcat(arg, cmd + start_word);
+        	arg[l+ (finish_word - start_word)] = '\0';
+				}				
+			  start_word = -1;
+        finish_word = -1;
+        wc++;
+      }
+      
+    }
+	}
+  printf("separe_command_args\n");
+}
+
 int tokenize(char *cmd, int s, int f)
 {
   int l;
@@ -122,7 +179,7 @@ int tokenize(char *cmd, int s, int f)
     }
     else
     {
-      if (start_word > 0)
+      if (start_word >= 0)
       {
         finish_word = i;
         strncpy(tok, cmd + start_word, finish_word - start_word);
@@ -212,10 +269,10 @@ int is_meta_character(char c)
 }
 
 /*
-execute 2 commands between and
-return: 
-    -1 -> something went wrong
-    0 -> everything ok
+  execute 2 commands between and
+  return: 
+      -1 -> something went wrong
+      0 -> everything ok
 */
 int execute_and(int s1, int f1, int s2, int f2)
 {
@@ -227,10 +284,10 @@ int execute_and(int s1, int f1, int s2, int f2)
 }
 
 /*
-execute 2 commands between or
-return: 
-    2 -> both commands went wrong
-    0 -> at least one command run successfully
+  execute 2 commands between or
+  return: 
+      2 -> both commands went wrong
+      0 -> at least one command run successfully
 */
 int execute_or(int s1, int f1, int s2, int f2)
 {
@@ -244,9 +301,9 @@ int execute_or(int s1, int f1, int s2, int f2)
   return 2;
 }
 
-/*
-execute 2 commands between pipe
-return: 
+/* 
+  execute 2 commands between pipe r
+  Return: 
     -1 -> something went wrong
     0 -> everything ok
 */
@@ -297,9 +354,21 @@ int execute_pipe(int s1, int f1, int s2, int f2)
 
 int is_valid_command(char *cmd)
 {
-  return TRUE;
+  return cmd != NULL && strlen(cmd) > 0;
 }
 bool is_valid_filename(char *fn)
 {
-  return TRUE;
+  if (fn != NULL && strlen(fn) > 0)
+  {
+    int f = open(fn, O_RDWR  | O_CREAT);
+    if (f < 0)
+      return FALSE;
+    else
+    {
+      close (f);
+      return TRUE;
+    }
+  }
+  else
+    return FALSE;
 }
