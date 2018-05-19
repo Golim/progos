@@ -174,6 +174,8 @@ int parse_argument(int argc, char **argv)
     {
       if (is_valid_command(cmd) == TRUE)
         valido = TRUE;
+      else
+        return ARG_NOT_SUPPORTED_CMD;
     }
     else
       valido = FALSE;

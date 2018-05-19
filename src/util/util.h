@@ -22,6 +22,7 @@
 #define ARG_DUP (-3)
 #define ARG_NOT_VALID_FN (-4)
 #define ARG_BAD_USAGE (-5)
+#define ARG_NOT_SUPPORTED_CMD (-6)
 
 #define ERR_TYPE_NOT_SUPPORTED (-2)
 #define ERR_CANNOT_WRITE_FILE (-1)

@@ -102,7 +102,6 @@ int execute(int s, int f)
 
 int separe_command_args(char *cmd, char *name, char *arg)
 {
-  printf("separe_command_args\n");
 	int wc = 0;
   int i;
 	int l=0;
@@ -114,24 +113,20 @@ int separe_command_args(char *cmd, char *name, char *arg)
 	
 	for (i = 0 ; i <= strlen(cmd) ; i++)
   {
-    printf("i: %d '%c')",cmd[i],cmd[i]);
     if (is_meta_character(cmd[i]) == -1)
     {
-      printf(" no META\n");
       //NON é UN SEPARATORE
       if (start_word < 0)
         start_word = i;
     }
     else
     {
-      printf(" META \n");
       if (start_word >= 0)
       {
         finish_word = i;
 				if(wc == 0)
 				{
 					//la prima parola è il nome comando
-          printf("[copio nome]\n");
 					strncpy(name, cmd + start_word, finish_word - start_word);
         	name[finish_word - start_word] = '\0';
 				}
@@ -152,7 +147,6 @@ int separe_command_args(char *cmd, char *name, char *arg)
       
     }
 	}
-  printf("separe_command_args\n");
 }
 
 int tokenize(char *cmd, int s, int f)
@@ -352,20 +346,38 @@ int execute_pipe(int s1, int f1, int s2, int f2)
   return status;
 }
 
+int execute_pipe_err(int s1, int f1, int s2, int f2)
+{
+ 
+  //TODO: implementa /&
+  return FALSE;
+}
+
+
 int is_valid_command(char *cmd)
 {
-  return cmd != NULL && strlen(cmd) > 0;
+  if(strstr(cmd, "(")!= NULL)
+    return FALSE;
+  if(strstr(cmd, ")")!= NULL)
+    return FALSE;
+  if(strstr(cmd, " & ")!= NULL)
+    return FALSE;
+  if(strstr(cmd, "[")!= NULL)
+    return FALSE;  
+  if(strstr(cmd, "]")!= NULL)  
+    return FALSE;
+  return TRUE;
 }
 bool is_valid_filename(char *fn)
 {
   if (fn != NULL && strlen(fn) > 0)
   {
-    int f = open(fn, O_RDWR  | O_CREAT);
-    if (f < 0)
+    FILE * f = fopen(fn, "a+");
+    if (f == NULL)
       return FALSE;
     else
     {
-      close (f);
+      fclose (f);
       return TRUE;
     }
   }

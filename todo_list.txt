@@ -1,15 +1,12 @@
-1) funzione per trasformare un percorso da relativo ad assoluto. (da fare appena viene chiamato il programma, così si sa la cartella corrente.)
-
 In Parser:
-  -bool is_valid_filename (char * fn)
   -int is_valid_command(char * cmd)
 
 In program.c
   -migliorare stampa in esegui programma con modalità verbose.
 
 Documentazione:
-  Cosa fare se specifico sia sep eche type??!?!?
+  Cosa fare se specifico sia sep che type??!?!?
 
 2) BUGS:
-  -non prende comandi con opzioni!
-  - se non esiste il loggile, crearlo prima di chiamare realpath.
+  "ls --format='single-column'"
+  comando non supportato perchè contiene un uguale e viene interpretato come opz=value
