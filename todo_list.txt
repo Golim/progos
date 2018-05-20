@@ -8,5 +8,11 @@ Documentazione:
   Cosa fare se specifico sia sep che type??!?!?
 
 2) BUGS:
-  "ls --format='single-column'"
-  comando non supportato perchè contiene un uguale e viene interpretato come opz=value
+1:
+	ls --format='single-column'"
+	  comando non supportato perchè contiene un uguale e viene interpretato come opz=value
+2:
+	il comando cmd || cmd, non funziona bene, dato che anche se il 
+	comando non va a buon fine, il log viene inviato correttamente
+	e quindi la sua esecuzione ritorna true.
+
