@@ -13,6 +13,5 @@
 extern int esegui_programma(char *);
 
 int run_program(char *cmd);
-void stop();
 
 #endif

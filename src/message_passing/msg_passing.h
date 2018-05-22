@@ -1,11 +1,11 @@
 #ifndef MSG_PASSING_h
-#define CONFIMSG_PASSING_hG_h
+#define MSG_PASSING_h
 
 #include "../util/util.h"
 
 //TODO: VA bene questo oppure bisogna cambiare?!
 #define EXTREF "./"
-#define EXTID (100)
+#define EXTID (99)
 
 extern int elaborate(msg *m);
 

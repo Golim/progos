@@ -8,9 +8,10 @@
 #include <fcntl.h>
 
 #include "parser.h"
+//TODO: togli costanti
 char controloperator[10][3];
-
 exp_token tokens[50];
+
 int tks = 0;
 
 void add_token(exp_token t);
@@ -51,7 +52,7 @@ int execute(int s, int f)
         return -1;
       if (is_unary_operator(tokens[i].value) == TRUE || s == tks - 1)
       {
-        if (i + 1 >= f)
+        if (i + 1 >= f) //se sono oltre la fine eseguo solo la prima parte
           return execute(s, s);
         else
         {
@@ -59,11 +60,12 @@ int execute(int s, int f)
           return execute(i + 1, f);
         }
       }
-      else
+      else // operatore binario
       {
         int j = i + 1;
         while (j <= f && !(is_unary_operator(tokens[i].value) == TRUE || j == tks - 1))
           j++;
+
         if (strcmp(tokens[i].value, "&&") == 0)
         {
           if (j == f && j + 1 <= tks)
@@ -102,16 +104,16 @@ int execute(int s, int f)
 
 int separe_command_args(char *cmd, char *name, char *arg)
 {
-	int wc = 0;
+  int wc = 0;
   int i;
-	int l=0;
+  int l = 0;
 
-	int start_word=-1;
-	int finish_word=-1;
-  strcpy(name,"");
-  strcpy(arg,"");
-	
-	for (i = 0 ; i <= strlen(cmd) ; i++)
+  int start_word = -1;
+  int finish_word = -1;
+  strcpy(name, "");
+  strcpy(arg, "");
+
+  for (i = 0; i <= strlen(cmd); i++)
   {
     if (is_meta_character(cmd[i]) == -1)
     {
@@ -124,29 +126,28 @@ int separe_command_args(char *cmd, char *name, char *arg)
       if (start_word >= 0)
       {
         finish_word = i;
-				if(wc == 0)
-				{
-					//la prima parola è il nome comando
-					strncpy(name, cmd + start_word, finish_word - start_word);
-        	name[finish_word - start_word] = '\0';
-				}
-				else
-				{
-					//sono argomenti
-          if (wc  > 1)
-				  	strcat(arg, " ");
+        if (wc == 0)
+        {
+          //la prima parola è il nome comando
+          strncpy(name, cmd + start_word, finish_word - start_word);
+          name[finish_word - start_word] = '\0';
+        }
+        else
+        {
+          //sono argomenti
+          if (wc > 1)
+            strcat(arg, " ");
 
-					l = strlen(arg);
-					strcat(arg, cmd + start_word);
-        	arg[l+ (finish_word - start_word)] = '\0';
-				}				
-			  start_word = -1;
+          l = strlen(arg);
+          strcat(arg, cmd + start_word);
+          arg[l + (finish_word - start_word)] = '\0';
+        }
+        start_word = -1;
         finish_word = -1;
         wc++;
       }
-      
     }
-	}
+  }
 }
 
 int tokenize(char *cmd, int s, int f)
@@ -223,15 +224,14 @@ bool is_unary_operator(char *op)
     return TRUE;
   if (strcmp(op, "\n") == 0)
     return TRUE;
-
   return FALSE;
 }
-
+//TODO: sistema l'array copiato ogni volta
 int is_control_operator(char *cmd, int i)
 {
   strcpy(controloperator[1], "||");
   strcpy(controloperator[2], "&&");
-  strcpy(controloperator[3], "|&");
+  strcpy(controloperator[3], "|&"); //TODO: impelmenta
   strcpy(controloperator[4], "&");
   strcpy(controloperator[5], ";;");
   strcpy(controloperator[6], ";");
@@ -340,47 +340,13 @@ int execute_pipe(int s1, int f1, int s2, int f2)
   close(stdin_fd);
   close(stdout_fd);
 
-  waitpid(-1, &status, 0);
-
   //wait for all child to end
+  waitpid(-1, &status, 0);
   return status;
 }
 
 int execute_pipe_err(int s1, int f1, int s2, int f2)
 {
- 
   //TODO: implementa /&
   return FALSE;
-}
-
-
-int is_valid_command(char *cmd)
-{
-  if(strstr(cmd, "(")!= NULL)
-    return FALSE;
-  if(strstr(cmd, ")")!= NULL)
-    return FALSE;
-  if(strstr(cmd, " & ")!= NULL)
-    return FALSE;
-  if(strstr(cmd, "[")!= NULL)
-    return FALSE;  
-  if(strstr(cmd, "]")!= NULL)  
-    return FALSE;
-  return TRUE;
-}
-bool is_valid_filename(char *fn)
-{
-  if (fn != NULL && strlen(fn) > 0)
-  {
-    FILE * f = fopen(fn, "a+");
-    if (f == NULL)
-      return FALSE;
-    else
-    {
-      fclose (f);
-      return TRUE;
-    }
-  }
-  else
-    return FALSE;
 }

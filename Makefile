@@ -1,6 +1,6 @@
 .PHONY: build clean
 SRC = src
-BUILDING = build
+BUILDING = obj
 BIN = bin
 
 CC = gcc -std=gnu90

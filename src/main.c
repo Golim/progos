@@ -9,6 +9,7 @@
 #include "config_output.h"
 #include "./parser/parser.h"
 
+/* Programm help functions */
 void print_usage();
 void print_help();
 
@@ -47,26 +48,31 @@ int parse_argument(int argc, char **argv)
 {
   int i;
 
-  bool valido = TRUE;
+  bool valid = TRUE;
   char *option = "";
   char *value = "";
 
-  //Troppi pochi argomenti
+  // Check argouments
   if (argc < 2)
     return ARG_TOO_FEW;
-  if (is_valid_command(argv[argc - 1]))
+  if (is_valid_command(argv[argc - 1])) //function defined in parser/parser.c
     strcpy(cmd, argv[argc - 1]);
 
-  for (i = 1; i < argc && valido == TRUE; i++)
+  //scroll through all the arguments
+  for (i = 1; i < argc && valid == TRUE; i++)
   {
-    valido = FALSE;
+    valid = FALSE;
 
+    //separate string if = is present -> extract parameters
     if (index(argv[i], '=') != NULL)
     {
-      option = strtok(argv[i], "=");
-      value = strtok(NULL, "");
-      if (option != NULL && value != NULL)
+      option = strtok(argv[i], "=");  //save string and get first token
+      value = strtok(NULL, ""); //get second token 
+
+      // ** command = arg ** 
+      if (option != NULL && value != NULL)   // check if strtok works fine
       {
+        // -f or --format
         if (strcmp(option, "--format") == 0 || strcmp(option, "-f") == 0)
         {
           if (format != UNSET)
@@ -77,15 +83,16 @@ int parse_argument(int argc, char **argv)
 
           if (strcmp(value, "csv") == 0)
           {
-            valido = TRUE;
+            valid = TRUE;
             format = TYPE_CSV;
           }
           else if (strcmp(value, "txt") == 0)
           {
-            valido = TRUE;
+            valid = TRUE;
             format = TYPE_TXT;
           }
         }
+        //-lf or --logfile
         else if (strcmp(option, "--logfile") == 0 || strcmp(option, "-lf") == 0)
         {
           if (arg_filename != UNSET)
@@ -93,16 +100,17 @@ int parse_argument(int argc, char **argv)
 
           arg_filename = TRUE;
 
-          if (is_valid_filename(value) == FALSE)
+          if (is_valid_filename(value) == FALSE)  //function defined in parser/parser.c
           {
             return ARG_NOT_VALID_FN;
           }
           else
           {
             strcpy(filename, value);
-            valido = TRUE;
+            valid = TRUE;
           }
         }
+        // -mu or -measure-units
         else if (strcmp(option, "-measure-units") == 0 || strcmp(option, "-mu") == 0)
         {
           if (mu != UNSET)
@@ -110,15 +118,16 @@ int parse_argument(int argc, char **argv)
 
           if (strcmp(value, "true") == 0)
           {
-            valido = TRUE;
+            valid = TRUE;
             mu = TRUE;
           }
           else if (strcmp(value, "false") == 0)
           {
-            valido = TRUE;
+            valid = TRUE;
             mu = FALSE;
           }
         }
+        // -s or --separator
         else if (strcmp(option, "--separator") == 0 || strcmp(option, "-s") == 0)
         {
           if (arg_sep != UNSET)
@@ -133,11 +142,12 @@ int parse_argument(int argc, char **argv)
             format = TYPE_TXT;
             arg_sep = TYPE_TXT;
           }
-          valido = TRUE;
+          valid= TRUE;
         }
-      }
-    }
+      }//end if strtok result check
+    }//end if("=" is in argv[1])
 
+    // ** only commands **
     else if (strcmp(argv[i], "--names") == 0 || strcmp(argv[i], "-n") == 0)
     {
       if (names != UNSET)
@@ -145,7 +155,7 @@ int parse_argument(int argc, char **argv)
       else
       {
         names = TRUE;
-        valido = TRUE;
+        valid= TRUE;
       }
     }
     else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
@@ -167,28 +177,33 @@ int parse_argument(int argc, char **argv)
       else
       {
         verbose = TRUE;
-        valido = TRUE;
+        valid= TRUE;
       }
     }
     else if (i == argc - 1)
     {
       if (is_valid_command(cmd) == TRUE)
-        valido = TRUE;
+        valid= TRUE;
       else
         return ARG_NOT_SUPPORTED_CMD;
     }
     else
-      valido = FALSE;
-  }
-  if (valido == FALSE)
+      valid= FALSE;
+  }//end for
+  
+  // check for results
+  if (valid== FALSE)
   {
     return ARG_BAD_USAGE;
   }
   if (strlen(cmd) == 0)
     return ARG_NOT_VALID_CMD;
+
+
   set_config_defaults();
   return OK_STATUS;
 }
+
 void print_usage()
 {
   printf("Usage:  stats [OPTION]... [COMMAND]\n");
@@ -230,22 +245,24 @@ void set_config_defaults()
 
 void print_help()
 {
+  printf(ANSI_COLOR_CYAN    "\tUSAGE: "    ANSI_COLOR_RESET "\n");
   printf("\
-Usage:  stats [OPTION]... [COMMAND]\n\
+stats [OPTION]... [COMMAND]\n\
 Execute COMMAND , log various statistics in a file\n\
-The command MUST be the last argument passed to stats\n\
+The command MUST be the last argument passed to stats\n\n\
 Example:  stats  ls \n\
 If the command has argument, the command has to be in quotes\n\
 Example:  stats \"ls -al\"\n\n");
 
-  printf("-OPTION\n");
+  printf(ANSI_COLOR_CYAN    "\tOPTIONS: "    ANSI_COLOR_RESET "\n");
   printf("All OPTION are not mandatory. Contemplated options are:\n");
 
   //-f --format
   printf("%10s", "-f=[v], ");
   printf("%-20s", "--format=[v]");
   printf("%s", "specifies the format for the output.\n\
-                               [v] can be 'csv' or 'txt'\n"); //Aggiungere default="txt"(??)
+                               [v] can be 'csv' or 'txt'\n\
+                               if empty, the default format is csv\n");
 
   //-lf --logfile
   printf("%10s", "-lf=[v], ");

@@ -34,7 +34,7 @@ int main(int argc,char **argv)
     return 0;
 }
 
-/*
+/**
 execute 2 commands between pipe
 return: 
     -1 -> something went wrong

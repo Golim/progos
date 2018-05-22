@@ -33,6 +33,10 @@
 
 #define UNSET (-2147483648)
 
+//white color for cmd
+#define ANSI_COLOR_CYAN "\x1b[36m"
+#define ANSI_COLOR_RESET "\x1b[0m"
+
 typedef int bool;
 typedef char *string;
 
@@ -51,5 +55,7 @@ typedef struct msg
 char *btoa(bool i);
 char *ftoa(bool i);
 int cond_print(const char *format, ...);
+bool is_valid_filename(char *fn);
+int is_valid_command(char *cmd);
 
 #endif
