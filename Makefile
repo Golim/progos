@@ -15,8 +15,8 @@ clean:
 	rm -f $(SRC)/*.gch
 
 ### MAIN ###
-main: main.o message_passing.o program.o logger.o stats.o  parser.o util.o bin 
-	$(CC) $(BUILDING)/main.o $(BUILDING)/util.o $(BUILDING)/program.o $(BUILDING)/client.o $(BUILDING)/server.o $(BUILDING)/logger.o  $(BUILDING)/parser.o $(BUILDING)/stats.o  -o $(BIN)/main
+main: main.o message_passing.o execute_commands.o program.o logger.o stats.o  parser.o util.o bin 
+	$(CC) $(BUILDING)/main.o $(BUILDING)/util.o $(BUILDING)/execute_commands.o $(BUILDING)/program.o $(BUILDING)/client.o $(BUILDING)/server.o $(BUILDING)/logger.o  $(BUILDING)/parser.o $(BUILDING)/stats.o  -o $(BIN)/stats
 
 main.o: building
 	$(CC) -c $(SRC)/main.c  -o $(BUILDING)/main.o
@@ -28,6 +28,10 @@ stats.o: $(SRC)/stats/stats.c  building
 ### PARSER ###
 parser.o: $(SRC)/parser/parser.c  building
 	$(CC) -c $(SRC)/parser/parser.c -o $(BUILDING)/parser.o
+
+### Execute Commands ###
+execute_commands.o: $(SRC)/execute/execute_commands.c building
+	$(CC) -c $(SRC)/execute/execute_commands.c -o $(BUILDING)/execute_commands.o
 
 ### Program ###
 program.o : $(SRC)/program/program.c building
@@ -45,7 +49,6 @@ logger.o: $(SRC)/logger/logger.c  building
 ### UTIL ###
 util.o: $(SRC)/util/util.c  building
 	$(CC) -c $(SRC)/util/util.c -o $(BUILDING)/util.o
-
 ### MAKE DIRECTORIES ###
 bin:
 	mkdir $(BIN) -p

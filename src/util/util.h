@@ -38,6 +38,7 @@
 //white color for cmd
 #define ANSI_COLOR_CYAN "\x1b[36m"
 #define ANSI_COLOR_RESET "\x1b[0m"
+#define BOLDWHITE   "\033[1m\033[37m"
 
 typedef int bool;
 typedef char *string;

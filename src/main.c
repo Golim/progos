@@ -246,7 +246,7 @@ void set_config_defaults()
 
 void print_help()
 {
-  printf(ANSI_COLOR_CYAN    "\tUSAGE: "    ANSI_COLOR_RESET "\n");
+  printf(BOLDWHITE      "\tUSAGE: "    ANSI_COLOR_RESET "\n");
   printf("\
 stats [OPTION]... [COMMAND]\n\
 Execute COMMAND , log various statistics in a file\n\
@@ -255,7 +255,7 @@ Example:  stats  ls \n\
 If the command has argument, the command has to be in quotes\n\
 Example:  stats \"ls -al\"\n\n");
 
-  printf(ANSI_COLOR_CYAN    "\tOPTIONS: "    ANSI_COLOR_RESET "\n");
+  printf(BOLDWHITE    "\tOPTIONS: "    ANSI_COLOR_RESET "\n");
   printf("All OPTION are not mandatory. Contemplated options are:\n");
 
   //-f --format
@@ -268,7 +268,10 @@ Example:  stats \"ls -al\"\n\n");
   //-lf --logfile
   printf("%10s", "-lf=[v], ");
   printf("%-20s", "--logfile=[v]");
-  printf("%s", "where [v] specifies the log file where stats will be appended\n");
+  printf("%s", "where [v] specifies the log file where stats will be appended\n\
+                              if not specified, the default file is different for csv or txt log\n\
+                              default files are: /tmp/log.txt\n\
+                                                 /tmp/log.csv\n");
 
   //-mu --measure-unit
   printf("%10s", "-mu=[v], ");
@@ -279,7 +282,7 @@ Example:  stats \"ls -al\"\n\n");
   //-n --names
   printf("%10s", "-n, ");
   printf("%-20s", "--names");
-  printf("%s", "specifies whether the output should contain the names of the fields.\n");
+  printf("%s", "specifies whether the output should contain names of the fields.\n");
 
   //-h --help
   printf("%10s", "-h, ");
@@ -293,7 +296,8 @@ Example:  stats \"ls -al\"\n\n");
                                [v] can be a character or a string \n\
                                in quotes if it is composed only of spaces \n\
                                or if it contains special characters (|, &, ;, (, ) ...).\n\
-                               e.g. -s=\" | \"\n"); //Definire meglio gli special characters
+                               e.g. -s=\" | \"\n\
+                               N.B. you can not specify both -f and -s\n"); //Definire meglio gli special characters
 
   //-u --usage
   printf("%10s", "-u, ");

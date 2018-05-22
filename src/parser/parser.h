@@ -3,22 +3,25 @@
 
 #define OPERATOR (1)
 #define COMMAND (2)
-#define OPERATOR (1)
+#define N_MAX_TOKENS (20)
 
 #include "../util/util.h"
+#include "../execute/execute_commands.h"
 
-int esegui_programma(char *);
+int run_cmd(char *);
 
-int parse(char *cmd);
 int separe_command_args(char *cmd, char *name, char *arg);
-int tokenize(char *cmd, int start, int finish);
 int is_control_operator(char *cmd, int i);
-int is_meta_character(char c);
+bool is_unary_operator(char *op);
 
 typedef struct exp_token
 {
   int type;
   char value[MAX_LEN_CMD];
 } exp_token;
+
+
+extern exp_token tokens[N_MAX_TOKENS];
+extern int tks;  //token found
 
 #endif

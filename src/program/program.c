@@ -20,7 +20,7 @@ int run_program(char *cmd)
   {
     cond_print("[Ready for execution]\n");
     cond_print("\n---\t output %s \t---\n", cmd);
-    esegui_programma(cmd);
+    run_cmd(cmd);
     cond_print("------------------------\n", cmd);
   }
   else

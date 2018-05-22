@@ -10,7 +10,7 @@
 #define DAEMON_CH_DIR (TRUE)
 #define DAEMON_CLOSE_OUT (TRUE)
 
-extern int esegui_programma(char *);
+extern int run_cmd(char *);
 
 int run_program(char *cmd);
 
