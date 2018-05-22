@@ -23,7 +23,7 @@ bool arg_filename = UNSET;
 char filename[MAX_LEN_FN] = "";
 bool names = UNSET;
 int arg_sep = UNSET;
-char sep[10] = "";
+char sep[MAX_LEN_SEP] = "";
 int format = UNSET;
 int verbose = UNSET;
 bool mu = UNSET;
@@ -135,7 +135,8 @@ int parse_argument(int argc, char **argv)
 
           if (format != UNSET)
             return ARG_BAD_USAGE;
-
+          if(strlen(value)>MAX_LEN_SEP -1)
+            return ARG_SEP_TOO_LONG;
           else if (strcmp(value, "") != 0)
           {
             strcpy(sep, value);

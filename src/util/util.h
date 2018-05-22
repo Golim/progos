@@ -6,6 +6,7 @@
 #define MAX_LEN_FN (255)
 #define MAX_LEN_CMD (255)
 #define MAX_LEN_STAT (500)
+#define MAX_LEN_SEP (20)
 
 #define TRUE 1
 #define FALSE 0
@@ -23,6 +24,7 @@
 #define ARG_NOT_VALID_FN (-4)
 #define ARG_BAD_USAGE (-5)
 #define ARG_NOT_SUPPORTED_CMD (-6)
+#define ARG_SEP_TOO_LONG (-7)
 
 #define ERR_TYPE_NOT_SUPPORTED (-2)
 #define ERR_CANNOT_WRITE_FILE (-1)

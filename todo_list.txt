@@ -1,11 +1,15 @@
 In Parser:
-  -int is_valid_command(char * cmd)
+  - implementa i TODO
+	- estrai execute functions e mettile in un file a parte
 
 In program.c
   -migliorare stampa in esegui programma con modalità verbose.
 
+
+mettere un return a stats e fare in modo che eseguie e logga ritorni il valore che ha ricevuto da stats
+
 Documentazione:
-  Cosa fare se specifico sia sep che type??!?!?
+  Cosa fare se specifico sia sep che type??!?!? --> da scrivere nell'help
 
 2) BUGS:
 1:
