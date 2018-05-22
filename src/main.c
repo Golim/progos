@@ -64,7 +64,7 @@ int parse_argument(int argc, char **argv)
     valid = FALSE;
 
     //separate string if = is present -> extract parameters
-    if (index(argv[i], '=') != NULL)
+    if (index(argv[i], '=') != NULL && i != argc-1)
     {
       option = strtok(argv[i], "=");  //save string and get first token
       value = strtok(NULL, ""); //get second token 

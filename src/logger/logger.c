@@ -46,7 +46,6 @@ int write_log(msg *m)
 		f = fopen(m->msg_log.fn, "a");
 		if (f == NULL)
 		{
-			//TODO: Gestisci errore
 			fprintf(stderr, "Errore nell'apertura del file!: [%s]\n", m->msg_log.fn);
 			return ERR_CANNOT_WRITE_FILE;
 		}

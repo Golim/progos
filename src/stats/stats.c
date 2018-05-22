@@ -66,5 +66,5 @@ int stats(char *cmd, char *stat, char *sep, bool mu, bool names)
 	sprintf(stat, "%s%d", stat, codice_ritorno);
 
 
-	return 0;
+	return codice_ritorno;
 }

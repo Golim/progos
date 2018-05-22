@@ -19,9 +19,12 @@ int run_program(char *cmd)
   if (init_client() == OK_STATUS)
   {
     cond_print("[Ready for execution]\n");
-    cond_print("\n---\t output %s \t---\n", cmd);
+    cond_print("\n---------    output %s     ---------\n", cmd);
     run_cmd(cmd);
-    cond_print("------------------------\n", cmd);
+    int i;
+    for (i = 0; i < strlen("---------    output      ---------\n") + strlen(cmd); i++)
+      cond_print("-", cmd);
+    cond_print("\n");
   }
   else
   {
@@ -69,17 +72,18 @@ void generate_daemon()
     wait(&fid);
   }
 }
-void esegui_e_logga(char *cmd)
+int esegui_e_logga(char *cmd)
 {
   char *msgtxt = malloc(sizeof(char) * MAX_LEN_STAT);
   msg message;
+  int c;
 
   if (strcmp(cmd, "stop_daemon") == 0)
     message.type = TYPE_EXIT;
   else
   {
     message.type = format;
-    stats(cmd, msgtxt, sep, mu, names);
+    c = stats(cmd, msgtxt, sep, mu, names);
   }
 
   strcpy(message.msg_log.txt, msgtxt);
@@ -92,4 +96,5 @@ void esegui_e_logga(char *cmd)
   }
 
   free(msgtxt);
+  return c;
 }

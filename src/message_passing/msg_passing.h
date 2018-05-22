@@ -3,7 +3,6 @@
 
 #include "../util/util.h"
 
-//TODO: VA bene questo oppure bisogna cambiare?!
 #define EXTREF "./"
 #define EXTID (99)
 

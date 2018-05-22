@@ -1,22 +1,4 @@
-In Parser:
-  - implementa i TODO
-	- estrai execute functions e mettile in un file a parte
-
-In program.c
-  -migliorare stampa in esegui programma con modalità verbose.
-
-
-mettere un return a stats e fare in modo che eseguie e logga ritorni il valore che ha ricevuto da stats
-
-Documentazione:
-  Cosa fare se specifico sia sep che type??!?!? --> da scrivere nell'help
-
-2) BUGS:
-1:
-	ls --format='single-column'"
-	  comando non supportato perchè contiene un uguale e viene interpretato come opz=value
-2:
-	il comando cmd || cmd, non funziona bene, dato che anche se il 
-	comando non va a buon fine, il log viene inviato correttamente
-	e quindi la sua esecuzione ritorna true.
-
+1) In execute Command
+flsrc/execute/execute_commands.c
+----------------------------------
+TODO: implementa /&

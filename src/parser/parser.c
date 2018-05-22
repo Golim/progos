@@ -14,8 +14,8 @@ int is_meta_character(char c);
 int tokenize(char *cmd);
 int is_meta_character(char c);
 
-//TODO: togli costanti
-char controloperator[10][3];
+const N_CONTROL_OPERATOR = 11;
+const char *controloperator[] = {"\n", "||", "&&", "|&", "&", ";;", ";", "(", ")", "|", "\0"};
 
 exp_token tokens[N_MAX_TOKENS];
 int tks = 0;
@@ -126,7 +126,13 @@ int tokenize(char *cmd)
       }
       start_command = -1;
       finish_command = -1;
-
+      if (cmd[i] == '\0')
+      {
+        et.type = OPERATOR;
+        strcpy(et.value, "\0");
+        add_token(et);
+      }
+      else
       if (strlen(controloperator[l]) > 0)
       {
         et.type = OPERATOR;
@@ -152,23 +158,14 @@ bool is_unary_operator(char *op)
     return TRUE;
   if (strcmp(op, "\n") == 0)
     return TRUE;
+  if (strcmp(op, "\0") == 0)
+    return TRUE;
   return FALSE;
 }
-//TODO: sistema l'array copiato ogni volta
 int is_control_operator(char *cmd, int i)
 {
-  strcpy(controloperator[1], "||");
-  strcpy(controloperator[2], "&&");
-  strcpy(controloperator[3], "|&"); //TODO: impelmenta
-  strcpy(controloperator[4], "&");
-  strcpy(controloperator[5], ";;");
-  strcpy(controloperator[6], ";");
-  strcpy(controloperator[7], "(");
-  strcpy(controloperator[8], ")");
-  strcpy(controloperator[9], "|");
-  strcpy(controloperator[0], "\n");
   int j;
-  for (j = 0; j < 10; j++)
+  for (j = 0; j < N_CONTROL_OPERATOR; j++)
   {
     if (controloperator[j][0] == cmd[i])
     {

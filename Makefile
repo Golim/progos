@@ -3,7 +3,7 @@ SRC = src
 BUILDING = obj
 BIN = bin
 
-CC = gcc -std=gnu90
+CC = gcc -std=gnu90 -g
 
 build: main
 
