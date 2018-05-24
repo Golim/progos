@@ -14,17 +14,20 @@ TODO
 
 ### Installing
 
-TODO
+Per compilare:
+make
 
+Per pulire la cartella:
+make clean
 ## Running the tests
 
-TODO
+
 
 ## Authors
 
-* **Matteo Ponza**
 * **Davide Ambrosi**
 * **Matteo Golinelli**
+* **Matteo Ponza**
 
 
 See the list of [contributors](https://github.com/PonzaMatteo/progos/graphs/contributors)

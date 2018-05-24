@@ -299,6 +299,10 @@ Example:  stats \"ls -al\"\n\n");
                                e.g. -s=\" | \"\n\
                                N.B. you can not specify both -f and -s\n"); //Definire meglio gli special characters
 
+   printf("%10s", "-v, ");
+  printf("%-20s", "--verbose");
+  printf("%s", "If secified the program will print various information messages during\n\
+                                the execution\n");
   //-u --usage
   printf("%10s", "-u, ");
   printf("%-20s", "--usage");
