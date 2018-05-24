@@ -69,7 +69,7 @@ void generate_daemon()
   }
   else
   {
-    wait(&fid);
+    my_wait(&fid);
   }
 }
 int esegui_e_logga(char *cmd)

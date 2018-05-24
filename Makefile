@@ -15,8 +15,8 @@ clean:
 	rm -f $(SRC)/*.gch
 
 ### MAIN ###
-main: main.o messanger.o execute_commands.o program.o logger.o stats.o  parser.o util.o bin 
-	$(CC) $(BUILDING)/main.o $(BUILDING)/util.o $(BUILDING)/execute_commands.o $(BUILDING)/program.o $(BUILDING)/client.o $(BUILDING)/server.o $(BUILDING)/logger.o  $(BUILDING)/parser.o $(BUILDING)/stats.o  -o $(BIN)/stats
+main: main.o messanger.o execute_commands.o program.o logger.o stats.o  parser.o util.o sys_wrapper.o  bin 
+	$(CC) $(BUILDING)/main.o $(BUILDING)/util.o $(BUILDING)/execute_commands.o $(BUILDING)/program.o $(BUILDING)/client.o $(BUILDING)/server.o $(BUILDING)/logger.o $(BUILDING)/sys_wrapper.o  $(BUILDING)/parser.o $(BUILDING)/stats.o  -o $(BIN)/stats
 
 main.o: building
 	$(CC) -c $(SRC)/main.c  -o $(BUILDING)/main.o
@@ -49,6 +49,10 @@ logger.o: $(SRC)/logger/logger.c  building
 ### UTIL ###
 util.o: $(SRC)/util/util.c  building
 	$(CC) -c $(SRC)/util/util.c -o $(BUILDING)/util.o
+
+### SYS_WRAPPER ###
+sys_wrapper.o: $(SRC)/sys_wrapper/sys_wrapper.c  building
+	$(CC) -c $(SRC)/sys_wrapper/sys_wrapper.c -o $(BUILDING)/sys_wrapper.o
 ### MAKE DIRECTORIES ###
 bin:
 	mkdir $(BIN) -p

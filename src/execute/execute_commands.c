@@ -10,6 +10,7 @@
 int execute_and(int s1, int f1, int s2, int f2);
 int execute_or(int s1, int f1, int s2, int f2);
 int execute_pipe(int s1, int f1, int s2, int f2);
+int execute_pipe_err(int s1, int f1, int s2, int f2);
 
 extern int esegui_e_logga(char *);
 
@@ -71,6 +72,16 @@ int execute(int s, int f)
           else
           {
             execute_pipe(s, i - 1, i + 1, j);
+            return execute(j + 1, f);
+          }
+        }
+        if (strcmp(tokens[i].value, "|&") == 0)
+        {
+          if (j == f && j + 1 <= tks)
+            return execute_pipe_err(s, i - 1, i + 1, f);
+          else
+          {
+            execute_pipe_err(s, i - 1, i + 1, j);
             return execute(j + 1, f);
           }
         }
@@ -165,6 +176,47 @@ int execute_pipe(int s1, int f1, int s2, int f2)
 
 int execute_pipe_err(int s1, int f1, int s2, int f2)
 {
-  //TODO: implementa /&
-  return FALSE;
+  pid_t p;
+  int pipefd[2];
+  pipe(pipefd);
+  int status;
+
+  // save stdout and stdin
+  int stdout_fd = dup(STDOUT_FILENO);
+  int std_err = dup(STDERR_FILENO);
+  int stdin_fd = dup(STDIN_FILENO);
+
+  p = fork();
+  if (p < 0)
+    return -1;
+  else if (p > 0)
+  {
+    //Esegui 1:
+    dup2(pipefd[1], STDOUT_FILENO); // sposta stdout
+    dup2(pipefd[1], STDERR_FILENO); // sposta stderr
+    close(pipefd[0]);
+    int r = execute(s1, f1); //esegui
+    dup2(stdout_fd, STDOUT_FILENO);      //ripristina stdout
+    dup2(stdout_fd, STDERR_FILENO);      //ripristina stderr
+  }
+  else
+  {
+    //Esegui 2
+    dup2(pipefd[0], STDIN_FILENO); //Sposta stdin
+    close(pipefd[1]);
+    int s = execute(s2, f2); //esegui
+    dup2(stdin_fd, 0);
+    exit(s);
+  }
+  //restore stdin and stdout
+  close(pipefd[0]);
+  close(pipefd[1]);
+
+  close(stdin_fd);
+  close(stdout_fd);
+
+  //wait for all child to end
+  waitpid(-1, &status, 0);
+  return status;
+
 }
