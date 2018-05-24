@@ -12,5 +12,6 @@
 
 // Functions
 int stats(char *cmd, char *stat, char *sep, bool mu, bool names);
+void send_to_logger(msg *m);
 
 #endif

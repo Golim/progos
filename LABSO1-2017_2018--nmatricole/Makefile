@@ -15,7 +15,7 @@ clean:
 	rm -f $(SRC)/*.gch
 
 ### MAIN ###
-main: main.o messanger.o execute_commands.o program.o logger.o stats.o  parser.o util.o bin 
+main: main.o message_passing.o execute_commands.o program.o logger.o stats.o  parser.o util.o bin 
 	$(CC) $(BUILDING)/main.o $(BUILDING)/util.o $(BUILDING)/execute_commands.o $(BUILDING)/program.o $(BUILDING)/client.o $(BUILDING)/server.o $(BUILDING)/logger.o  $(BUILDING)/parser.o $(BUILDING)/stats.o  -o $(BIN)/stats
 
 main.o: building
@@ -37,8 +37,8 @@ execute_commands.o: $(SRC)/execute/execute_commands.c building
 program.o : $(SRC)/program/program.c building
 	$(CC) -c $(SRC)/program/program.c -o $(BUILDING)/program.o
 
-### messanger
-messanger.o: $(SRC)/messanger/client.c  $(SRC)/messanger/server.c building
+### Message_passing
+message_passing.o: $(SRC)/messanger/client.c  $(SRC)/messanger/server.c building
 	$(CC) -c $(SRC)/messanger/client.c -o $(BUILDING)/client.o
 	$(CC) -c $(SRC)/messanger/server.c -o $(BUILDING)/server.o
 
