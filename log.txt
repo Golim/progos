@@ -2,3 +2,5 @@
 [cmd]ls___[args]tua mamma___[duration_realtime]2ms___[duration_CPU]86us___[return_code]512
 [cmd]lala___[args]___[duration_realtime]1ms___[duration_CPU]184us___[return_code]32512
 [cmd]lala___[args]___[duration_realtime]1___[duration_CPU]86___[return_code]32512
+ls ,  , 2ms , 66us , 0
+ls ,  , 3ms , 89us , 0
