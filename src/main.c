@@ -9,16 +9,32 @@
 #include "config_output.h"
 #include "./parser/parser.h"
 
+//--local functions--
+/**
+ * check if the input command is well formatted
+ * Return: OK_STATUS, if it's correct 
+ *         ARG_TOO_FEW, if there are too few argouments
+ *         ARG_BAD_USAGE, if the argouments are wrong 
+ *         ARG_DUP, if there are any douplicated argoument
+ *         ARG_NOT_VALID_FN, if the file name is not valid
+ * */
+int parse_argument(int argc, char **argv);
+
+/**
+ * set deafalt configurations if not specified in the argouments
+ * */
+void set_config_defaults();
+
 /* Programm help functions */
 void print_usage();
 void print_help();
+//-------------------
 
-int parse_argument(int argc, char **argv);
-void set_config_defaults();
-int cond_print(const char *format, ...);
+//--external functions--
+int cond_print(const char *format, ...);  // util/util.c
+//----------------------
 
 char cmd[MAX_LEN_CMD] = "";
-
 bool arg_filename = UNSET;
 char filename[MAX_LEN_FN] = "";
 bool names = UNSET;
@@ -31,7 +47,7 @@ bool mu = UNSET;
 int main(int argc, char **argv)
 {
   int r;
-  r = parse_argument(argc, argv);
+  r = parse_argument(argc, argv); 
   if (r < 0)
   {
     fprintf(stderr, "Error while reading arguments. Error Code:[%d]\n", r);
@@ -55,7 +71,7 @@ int parse_argument(int argc, char **argv)
   // Check argouments
   if (argc < 2)
     return ARG_TOO_FEW;
-  if (is_valid_command(argv[argc - 1])) //function defined in parser/parser.c
+  if (is_valid_command(argv[argc - 1])) //function defined in util/util.c
     strcpy(cmd, argv[argc - 1]);
 
   //scroll through all the arguments
@@ -100,7 +116,7 @@ int parse_argument(int argc, char **argv)
 
           arg_filename = TRUE;
 
-          if (is_valid_filename(value) == FALSE)  //function defined in parser/parser.c
+          if (is_valid_filename(value) == FALSE)  //function defined in util/util.c
           {
             return ARG_NOT_VALID_FN;
           }
@@ -183,7 +199,7 @@ int parse_argument(int argc, char **argv)
     }
     else if (i == argc - 1)
     {
-      if (is_valid_command(cmd) == TRUE)
+      if (is_valid_command(cmd) == TRUE)  //function defined in util/util.c
         valid= TRUE;
       else
         return ARG_NOT_SUPPORTED_CMD;
@@ -200,8 +216,8 @@ int parse_argument(int argc, char **argv)
   if (strlen(cmd) == 0)
     return ARG_NOT_VALID_CMD;
 
-
   set_config_defaults();
+
   return OK_STATUS;
 }
 
