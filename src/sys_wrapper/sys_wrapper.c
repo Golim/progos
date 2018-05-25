@@ -30,7 +30,7 @@ int my_wait(int * status)
 // pid_t waitpid(pid_t pid, int *wstatus, int options)
 pid_t my_waitpid(pid_t pid, int *wstatus, int options)
 {
-  int r = my_waitpid(pid, wstatus, options);
+  int r = waitpid(pid, wstatus, options);
   if(r == -1)
     my_exit(-1);
   else
@@ -81,9 +81,20 @@ int my_close(int fd)
     return r;
 }
 
+// Wraapper for system call remove
+//int remove(const char *pathname)
+int my_remove(const char *pathname)
+{
+  int r = remove(pathname);
+  if(r == -1)
+    my_exit(-1);
+  else
+    return r;
+}
+
 // Wrapper for system call close
 // int open(const char *pathname, int flags, mode_t mode)
-int open(const char *pathname, int flags, mode_t mode)
+int my_open(const char *pathname, int flags, mode_t mode)
 {
   int r = open(pathname, flags, mode);
   if(r == -1)

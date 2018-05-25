@@ -1,7 +1,6 @@
 #ifndef UTIL_h
 #define UTIL_h
 
-#define MAXLEN 255
 
 #define MAX_LEN_FN (255)
 #define MAX_LEN_CMD (255)
@@ -45,8 +44,8 @@ typedef char *string;
 
 struct log
 {
-  char txt[255];
-  char fn[255];
+  char txt[MAX_LEN_STAT];
+  char fn[MAX_LEN_FN];
 };
 
 typedef struct msg

@@ -22,6 +22,6 @@ typedef struct exp_token
 
 
 extern exp_token tokens[N_MAX_TOKENS];
-extern int tks;  //token found
+extern int tks;  //number of token found
 
 #endif

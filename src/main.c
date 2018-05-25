@@ -50,9 +50,8 @@ int main(int argc, char **argv)
   r = parse_argument(argc, argv); 
   if (r < 0)
   {
-    fprintf(stderr, "Error while reading arguments. Error Code:[%d]\n", r);
     print_usage();
-    exit(r);
+    my_exit(r);
   }
 
   cond_print("[Running program with parameters]: \n -format: \t%s \n -filename: \t%s\n -command: \t%s \n -measure unit: %s\n -separator: \t%s \n\n", ftoa(format), filename, cmd, btoa(mu), sep);

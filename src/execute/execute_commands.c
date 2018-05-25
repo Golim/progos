@@ -16,7 +16,6 @@ extern int esegui_e_logga(char *);
 
 int execute(int s, int f)
 {
-  //printf("%d %d \n", s, f);
   if (s == f)
   {
     if (strlen(tokens[s].value) > 0)
@@ -135,12 +134,12 @@ int execute_pipe(int s1, int f1, int s2, int f2)
   //== create two process and make them comunicate using a pipe
   pid_t p;
   int pipefd[2];
-  pipe(pipefd);
+  my_pipe(pipefd);
   int status;
 
   // save stdout and stdin
-  int stdout_fd = dup(STDOUT_FILENO);
-  int stdin_fd = dup(STDIN_FILENO);
+  int stdout_fd = my_dup(STDOUT_FILENO);
+  int stdin_fd = my_dup(STDIN_FILENO);
 
   p = fork();
   if (p < 0)
@@ -148,29 +147,29 @@ int execute_pipe(int s1, int f1, int s2, int f2)
   else if (p > 0)
   {
     //Esegui 1:
-    dup2(pipefd[1], STDOUT_FILENO); // sposta stdout
-    close(pipefd[0]);
+    my_dup2(pipefd[1], STDOUT_FILENO); // sposta stdout
+    my_close(pipefd[0]);
     int r = execute(s1, f1); //esegui
-    dup2(stdout_fd, 1);      //ripristina stdout
+    my_dup2(stdout_fd, 1);   //ripristina stdout
+    my_close(pipefd[1]);
   }
   else
   {
     //Esegui 2
-    dup2(pipefd[0], STDIN_FILENO); //Sposta stdin
-    close(pipefd[1]);
+    my_dup2(pipefd[0], STDIN_FILENO); //Sposta stdin
+    my_close(pipefd[1]);
     int s = execute(s2, f2); //esegui
-    dup2(stdin_fd, 0);
+    my_dup2(stdin_fd, 0);
     exit(s);
+    my_close(pipefd[0]);
   }
   //restore stdin and stdout
-  close(pipefd[0]);
-  close(pipefd[1]);
 
-  close(stdin_fd);
-  close(stdout_fd);
+  my_close(stdin_fd);
+  my_close(stdout_fd);
 
   //wait for all child to end
-  waitpid(-1, &status, 0);
+  my_waitpid(-1, &status, 0);
   return status;
 }
 
@@ -178,13 +177,13 @@ int execute_pipe_err(int s1, int f1, int s2, int f2)
 {
   pid_t p;
   int pipefd[2];
-  pipe(pipefd);
+  my_pipe(pipefd);
   int status;
 
   // save stdout and stdin
-  int stdout_fd = dup(STDOUT_FILENO);
-  int std_err = dup(STDERR_FILENO);
-  int stdin_fd = dup(STDIN_FILENO);
+  int stdout_fd = my_dup(STDOUT_FILENO);
+  int std_err = my_dup(STDERR_FILENO);
+  int stdin_fd = my_dup(STDIN_FILENO);
 
   p = fork();
   if (p < 0)
@@ -192,31 +191,31 @@ int execute_pipe_err(int s1, int f1, int s2, int f2)
   else if (p > 0)
   {
     //Esegui 1:
-    dup2(pipefd[1], STDOUT_FILENO); // sposta stdout
-    dup2(pipefd[1], STDERR_FILENO); // sposta stderr
-    close(pipefd[0]);
-    int r = execute(s1, f1); //esegui
-    dup2(stdout_fd, STDOUT_FILENO);      //ripristina stdout
-    dup2(stdout_fd, STDERR_FILENO);      //ripristina stderr
+    my_dup2(pipefd[1], STDOUT_FILENO); // sposta stdout
+    my_dup2(pipefd[1], STDERR_FILENO); // sposta stderr
+    my_close(pipefd[0]);
+    int r = execute(s1, f1);        //esegui
+    my_dup2(stdout_fd, STDOUT_FILENO); //ripristina stdout
+    my_dup2(stdout_fd, STDERR_FILENO); //ripristina stderr
+    my_close(pipefd[1]);
   }
   else
   {
     //Esegui 2
-    dup2(pipefd[0], STDIN_FILENO); //Sposta stdin
-    close(pipefd[1]);
+    my_dup2(pipefd[0], STDIN_FILENO); //Sposta stdin
+    my_close(pipefd[1]);
     int s = execute(s2, f2); //esegui
-    dup2(stdin_fd, 0);
+    my_dup2(stdin_fd, 0);
+    my_close(pipefd[0]);
     exit(s);
   }
   //restore stdin and stdout
-  close(pipefd[0]);
-  close(pipefd[1]);
-
-  close(stdin_fd);
-  close(stdout_fd);
+  
+  
+  my_close(stdin_fd);
+  my_close(stdout_fd);
 
   //wait for all child to end
-  waitpid(-1, &status, 0);
+  my_waitpid(-1, &status, 0);
   return status;
-
 }

@@ -19,10 +19,10 @@ int run_program(char *cmd)
   if (init_client() == OK_STATUS)
   {
     cond_print("[Ready for execution]\n");
-    cond_print("\n---------    output %s     ---------\n", cmd);
+    cond_print("\n---------    output: \"%s\"    ---------\n", cmd);
     run_cmd(cmd);
     int i;
-    for (i = 0; i < strlen("---------    output      ---------\n") + strlen(cmd); i++)
+    for (i = 0; i < strlen("---------    output:\"\"    ---------n") + strlen(cmd); i++)
       cond_print("-", cmd);
     cond_print("\n");
   }
@@ -89,11 +89,7 @@ int esegui_e_logga(char *cmd)
   strcpy(message.msg_log.txt, msgtxt);
   strcpy(message.msg_log.fn, filename);
 
-  int r = send_msg(&message);
-  if (r < 0)
-  {
-    fprintf(stderr, "Errore nel'invio del log:[%d] \n", r);
-  }
+  send_msg(&message);
 
   free(msgtxt);
   return c;
