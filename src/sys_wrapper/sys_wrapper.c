@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
 #include "../util/util.h"
 
@@ -14,9 +17,9 @@ void my_exit(int s)
 
 // Wrapper for system call wait
 // int wait (int * status)
-void my_wait(int * s)
+int my_wait(int * status)
 {
-  int r = wait(s);
+  int r = wait(status);
   if(r == -1)
     my_exit(-1); //Set the appropriate return code that would be recognized by my_strerr
   else
@@ -27,7 +30,7 @@ void my_wait(int * s)
 // pid_t waitpid(pid_t pid, int *wstatus, int options)
 pid_t my_waitpid(pid_t pid, int *wstatus, int options)
 {
-  int r = my_waitpid(pid, wstatus, options)
+  int r = my_waitpid(pid, wstatus, options);
   if(r == -1)
     my_exit(-1);
   else
@@ -78,12 +81,11 @@ int my_close(int fd)
     return r;
 }
 
-
 // Wrapper for system call close
-// pid_t waitpid(pid_t pid, int *wstatus, int options)
-pid_t my_waitpid(pid_t pid, int *wstatus, int options)
+// int open(const char *pathname, int flags, mode_t mode)
+int open(const char *pathname, int flags, mode_t mode)
 {
-  int r = my_waitpid(pid, wstatus, options)
+  int r = open(pathname, flags, mode);
   if(r == -1)
     my_exit(-1);
   else
