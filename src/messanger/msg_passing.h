@@ -3,7 +3,7 @@
 
 #include "../util/util.h"
 
-#define EXTREF "./"
+#define EXTREF "/tmp/"
 #define EXTID (99)
 
 extern int elaborate(msg *m);
