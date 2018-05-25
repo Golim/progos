@@ -5,12 +5,16 @@
 
 #include "stats.h"
 
+/**
+ * calcoulate the statistics of a single command with one or more parameters
+ * Return: the result code of the execution of the received command
+ * */
 int stats(char *cmd, char *stat, char *sep, bool mu, bool names)
 {
 	strcpy(stat,"");
-	int codice_ritorno;
-	long durata_realtime; //in ms
-	long durata_cputime;	//in ms
+	int return_code;
+	long realtime_length; //in ms
+	long cputime_length;  //in ms
 	char nome_comando[COMMAND_MAX_LEN];
 	char argomenti[ARG_MAX_LEN];
 
@@ -22,18 +26,19 @@ int stats(char *cmd, char *stat, char *sep, bool mu, bool names)
 
 	separe_command_args(cmd, nome_comando, argomenti);
 
-	clock_gettime(CLOCK_REALTIME, &clock_start_realtime);					 //Inizio realtime
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &clock_start_cputime); //Inizio CPUtime
-	//Esecuzione comando
-	codice_ritorno = system(cmd);
+	clock_gettime(CLOCK_REALTIME, &clock_start_realtime);		 //Start realtime
+	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &clock_start_cputime); //Start CPUtime
+	
+	//Execute command
+	return_code = system(cmd);
 
 	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &clock_finish_cputime);
 	clock_gettime(CLOCK_REALTIME, &clock_finish_realtime);
 
-	//Durata real-time
-	durata_realtime = (clock_finish_realtime.tv_sec - clock_start_realtime.tv_sec) * 1000 + (clock_finish_realtime.tv_nsec - clock_start_realtime.tv_nsec) / TIME_FACTOR;
-	//Durata CPU-time
-	durata_cputime = (clock_finish_cputime.tv_sec - clock_start_cputime.tv_sec) * 1000000 + (clock_finish_cputime.tv_nsec - clock_start_cputime.tv_nsec) / 1000;
+	//Get real-time length
+	realtime_length = (clock_finish_realtime.tv_sec - clock_start_realtime.tv_sec) * 1000 + (clock_finish_realtime.tv_nsec - clock_start_realtime.tv_nsec) / TIME_FACTOR;
+	//Get CPU-time length
+	cputime_length = (clock_finish_cputime.tv_sec - clock_start_cputime.tv_sec) * 1000000 + (clock_finish_cputime.tv_nsec - clock_start_cputime.tv_nsec) / 1000;
 
 	if (names == TRUE)
 		sprintf(stat, "%s[cmd]", stat);
@@ -47,24 +52,23 @@ int stats(char *cmd, char *stat, char *sep, bool mu, bool names)
 	if (names == TRUE)
 		sprintf(stat, "%s[duration_realtime]", stat);
 	if (mu == TRUE)
-		sprintf(stat, "%s%lims", stat, durata_realtime);
+		sprintf(stat, "%s%lims", stat, realtime_length);
 	else
-		sprintf(stat, "%s%li", stat, durata_realtime);
+		sprintf(stat, "%s%li", stat, realtime_length);
 
 	strcat(stat, sep);
 
 	if (names == TRUE)
 		sprintf(stat, "%s[duration_CPU]", stat);
 	if (mu == TRUE)
-		sprintf(stat, "%s%lius", stat, durata_cputime);
+		sprintf(stat, "%s%lius", stat, cputime_length);
 	else
-		sprintf(stat, "%s%li", stat, durata_cputime);
+		sprintf(stat, "%s%li", stat, cputime_length);
 
 	strcat(stat, sep);
 	if (names == TRUE)
 		sprintf(stat, "%s[return_code]", stat);
-	sprintf(stat, "%s%d", stat, codice_ritorno);
+	sprintf(stat, "%s%d", stat, return_code);
 
-
-	return codice_ritorno;
+	return return_code;
 }
