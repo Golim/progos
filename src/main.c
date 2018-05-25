@@ -55,7 +55,7 @@ int main(int argc, char **argv)
     exit(r);
   }
 
-  cond_print("[Running program with parameters]: \n -format: %s \n -filename: %s\n -cmd: %s \n -mu: %s\n -sep: %s \n", ftoa(format), filename, cmd, btoa(mu), sep);
+  cond_print("[Running program with parameters]: \n -format: \t%s \n -filename: \t%s\n -command: \t%s \n -measure unit: %s\n -separator: \t%s \n\n", ftoa(format), filename, cmd, btoa(mu), sep);
   run_program(cmd);
   return 0;
 }
