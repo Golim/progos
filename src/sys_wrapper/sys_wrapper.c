@@ -21,7 +21,7 @@ int my_wait(int * status)
 {
   int r = wait(status);
   if(r == -1)
-    my_exit(-1); //Set the appropriate return code that would be recognized by my_strerr
+    my_exit(ERR_WAIT);
   else
     return r;
 }
@@ -32,7 +32,7 @@ pid_t my_waitpid(pid_t pid, int *wstatus, int options)
 {
   int r = waitpid(pid, wstatus, options);
   if(r == -1)
-    my_exit(-1);
+    my_exit(ERR_WAITPID);
   else
     return r;
 }
@@ -43,7 +43,7 @@ int my_dup(int oldfd)
 {
   int r = dup(oldfd);
   if(r == -1)
-    my_exit(-1);
+    my_exit(ERR_DUP);
   else
     return r;
 }
@@ -54,7 +54,7 @@ int my_dup2(int oldfd, int newfd)
 {
   int r = dup2(oldfd, newfd);
   if(r == -1)
-    my_exit(-1);
+    my_exit(ERR_DUP2);
   else
     return r;
 }
@@ -65,7 +65,7 @@ int my_pipe(int pipefd[2])
 {
   int r = pipe(pipefd);
   if(r == -1)
-    my_exit(-1);
+    my_exit(ERR_PIPE);
   else
     return r;
 }
@@ -76,7 +76,7 @@ int my_close(int fd)
 {
   int r = close(fd);
   if(r == -1)
-    my_exit(-1);
+    my_exit(ERR_CLOSE);
   else
     return r;
 }
@@ -87,7 +87,7 @@ int my_remove(const char *pathname)
 {
   int r = remove(pathname);
   if(r == -1)
-    my_exit(-1);
+    my_exit(ERR_REMOVE);
   else
     return r;
 }
@@ -98,7 +98,7 @@ int my_open(const char *pathname, int flags, mode_t mode)
 {
   int r = open(pathname, flags, mode);
   if(r == -1)
-    my_exit(-1);
+    my_exit(ERR_OPEN);
   else
     return r;
 }
@@ -109,13 +109,47 @@ char * my_strerr(int s)
   switch(s)
   {
     case -1: // Keep -1 for generic error, use another number for more specific
-      return "generic error";
+      return "Generic error";
     break;
+
+    case ERR_WAIT:
+      return "Error in function wait";
+    break;
+
+    case ERR_WAITPID: 
+      return "Error in function waitpid";
+    break;
+
+    case ERR_DUP: 
+      return "Error in function dup";
+    break;
+
+    case ERR_DUP2: 
+      return "Error in function dup2";
+    break;
+
+    case ERR_PIPE: 
+      return "Error in function pipe";
+    break;
+
+    case ERR_CLOSE: 
+      return "Error in function close";
+    break;
+
+    case ERR_OPEN: 
+      return "Error in function open";
+    break;
+
+    case ERR_REMOVE: 
+      return "Error in function remove";
+    break;
+    
     case ARG_TOO_FEW : 
       return "More arguments expeted";
     break;
+
     default:
-      return "";
+      return "Generic error";
   }
   return "";
 }

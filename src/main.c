@@ -316,7 +316,7 @@ Example:  stats \"ls -al\"\n\n");
 
    printf("%10s", "-v, ");
   printf("%-20s", "--verbose");
-  printf("%s", "If secified the program will print various information messages during\n\
+  printf("%s", "if secified the program will print various information messages during\n\
                                 the execution\n");
   //-u --usage
   printf("%10s", "-u, ");
