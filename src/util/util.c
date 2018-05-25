@@ -5,10 +5,19 @@
 #include "util.h"
 #include "../config_output.h"
 
+/**
+ * receive a bool value and return the ascii human readable value.
+ * Return true if 1, false otherwise
+ * */
 char *btoa(bool i)
 {
   return i == TRUE ? "true" : "false";
 }
+
+/**
+ * receive the file format given as parameter and 
+ * return the ascii human readable value
+ * */
 char *ftoa(bool i)
 {
   if (i == TYPE_CSV)
@@ -21,6 +30,9 @@ char *ftoa(bool i)
     return "N.D.";
 }
 
+/**
+ * print the list of argouments received
+ * */
 int cond_print(const char *format, ...)
 {
   if (verbose == TRUE)
