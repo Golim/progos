@@ -1,6 +1,5 @@
-ls ,  , 2ms , 62us , 0
-ls , -al , 44ms , 69us , 0
--s= ,  , 0ms , 46us , 512
--s= ,  , 0ms , 85us , 512
-ls___-al___6ms___94us___0
-ls___-al___4ms___52us___0
+[cmd]ls.....} &{[args]-al.....} &{[duration_realtime]42ms.....} &{[duration_CPU]51us.....} &{[return_code]0
+[cmd]ls.....} &{[args]-al.....} &{[duration_realtime]5ms.....} &{[duration_CPU]55us.....} &{[return_code]0
+[cmd]ls.....} &{[args]-al.....} &{[duration_realtime]4ms.....} &{[duration_CPU]66us.....} &{[return_code]0
+[cmd]ls.....} &{[args]-al.....} &{[duration_realtime]4ms.....} &{[duration_CPU]51us.....} &{[return_code]0
+[cmd]ls.....} &{[args]-al.....} &{[duration_realtime]5ms.....} &{[duration_CPU]67us.....} &{[return_code]0

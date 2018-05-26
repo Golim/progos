@@ -41,6 +41,7 @@ int send_msg(msg *m)
   }
   return 0;
 }
+
 int delete_client()
 {
   return my_close(client_queue);
