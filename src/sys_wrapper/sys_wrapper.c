@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 #include "../sys_wrapper/sys_wrapper.h"
 #include "../util/util.h"
@@ -23,19 +26,19 @@ int my_wait(int *status)
   int r = wait(status);
   if (r == -1)
     my_exit(ERR_WAIT);
-  else
-    return r;
+
+  return r;
 }
 
-// Wrapper for system call close
+// Wrapper for system call waitpid
 // pid_t waitpid(pid_t pid, int *wstatus, int options)
 pid_t my_waitpid(pid_t pid, int *wstatus, int options)
 {
   int r = waitpid(pid, wstatus, options);
   if (r == -1)
     my_exit(ERR_WAITPID);
-  else
-    return r;
+
+  return r;
 }
 
 // Wrapper for system call dup
@@ -45,8 +48,8 @@ int my_dup(int oldfd)
   int r = dup(oldfd);
   if (r == -1)
     my_exit(ERR_DUP);
-  else
-    return r;
+
+  return r;
 }
 
 // Wrapper for system call dup2
@@ -56,8 +59,8 @@ int my_dup2(int oldfd, int newfd)
   int r = dup2(oldfd, newfd);
   if (r == -1)
     my_exit(ERR_DUP2);
-  else
-    return r;
+
+  return r;
 }
 
 // Wrapper for system call pipe
@@ -67,8 +70,8 @@ int my_pipe(int pipefd[2])
   int r = pipe(pipefd);
   if (r == -1)
     my_exit(ERR_PIPE);
-  else
-    return r;
+
+  return r;
 }
 
 // Wrapper for system call close
@@ -78,8 +81,8 @@ int my_close(int fd)
   int r = close(fd);
   if (r == -1)
     my_exit(ERR_CLOSE);
-  else
-    return r;
+
+  return r;
 }
 
 // Wraapper for system call remove
@@ -89,8 +92,8 @@ int my_remove(const char *pathname)
   int r = remove(pathname);
   if (r == -1)
     my_exit(ERR_REMOVE);
-  else
-    return r;
+
+  return r;
 }
 
 // Wrapper for system call close
@@ -100,8 +103,8 @@ int my_open(const char *pathname, int flags, mode_t mode)
   int r = open(pathname, flags, mode);
   if (r == -1)
     my_exit(ERR_OPEN);
-  else
-    return r;
+
+  return r;
 }
 
 // Function that return the strig given an error number

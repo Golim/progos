@@ -4,6 +4,7 @@
 #include <time.h>
 
 #include "stats.h"
+#include "../parser/parser.h"
 
 /**
  * calcoulate the statistics of a single command with one or more parameters

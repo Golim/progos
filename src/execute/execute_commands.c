@@ -158,9 +158,9 @@ int execute_pipe(int s1, int f1, int s2, int f2)
     //Esegui 2
     my_dup2(pipefd[0], STDIN_FILENO); //Sposta stdin
     my_close(pipefd[1]);
-    int s = execute(s2, f2); //esegui
+    execute(s2, f2); //esegui
     my_dup2(stdin_fd, 0);
-    exit(s);
+    //exit(s); ????????????????????????
     my_close(pipefd[0]);
   }
   //restore stdin and stdout

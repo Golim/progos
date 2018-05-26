@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 #include <sys/types.h>
 
 #include "program.h"
@@ -22,7 +23,7 @@ int run_program(char *cmd)
     cond_print("\n---------    output: \"%s\"    ---------\n", cmd);
     run_cmd(cmd);
     int i;
-    for (i = 0; i < strlen("---------    output:\"\"    ---------n") + strlen(cmd); i++)
+    for (i = 0; i < abs(strlen("---------    output:\"\"    ---------n") + strlen(cmd)); i++)
       cond_print("-", cmd);
     cond_print("\n");
   }

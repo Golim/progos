@@ -1,14 +1,15 @@
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include "parser.h"
 //Internal Fuctions
 void add_token(exp_token t);
 int is_meta_character(char c);
-int tokenize(char *cmd);
+void tokenize(char *cmd);
 int is_meta_character(char c);
 
-const N_CONTROL_OPERATOR = 11;
+const int N_CONTROL_OPERATOR = 11;
 const char *controloperators[] = {"\n", "||", "&&", "|&", "&", ";;", ";", "(", ")", "|", "\0"};
 
 
@@ -27,7 +28,7 @@ int run_cmd(char *cmd)
 /*
 * Function extract the command name and the arduments from a string
 */
-int separe_command_args(char *cmd, char *name, char *arg)
+void separe_command_args(char *cmd, char *name, char *arg)
 {
   int wc = 0;
   int i;
@@ -38,7 +39,7 @@ int separe_command_args(char *cmd, char *name, char *arg)
   strcpy(name, "");
   strcpy(arg, "");
 
-  for (i = 0; i <= strlen(cmd); i++)
+  for (i = 0; i <= abs(strlen(cmd)); i++)
   {
     if (is_meta_character(cmd[i]) == -1)
     {
@@ -80,7 +81,7 @@ int separe_command_args(char *cmd, char *name, char *arg)
   subdivite it in several token. Each token represent a simple command or an operator.
   The token sequence is stored in global variable "tokens"
 */
-int tokenize(char *cmd)
+void tokenize(char *cmd)
 {
   int l;
   int i;

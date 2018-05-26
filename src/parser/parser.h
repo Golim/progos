@@ -10,7 +10,7 @@
 
 int run_cmd(char *);
 
-int separe_command_args(char *cmd, char *name, char *arg);
+void separe_command_args(char *cmd, char *name, char *arg);
 int is_control_operator(char *cmd, int i);
 bool is_unary_operator(char *op);
 

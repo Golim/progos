@@ -3,16 +3,18 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/ipc.h>
+#include <sys/msg.h>
 #include <fcntl.h>
 
 #include "./msg_passing.h"
+#include "../sys_wrapper/sys_wrapper.h"
 
 int server_queue;
 
 key_t get_server_key()
 {
   int fd = open(EXTREF, 0777, O_CREAT);
-  close(fd);
+  my_close(fd);
   remove(EXTREF);
   int i = ftok(EXTREF, EXTID);
   if (i < 0)

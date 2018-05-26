@@ -2,8 +2,10 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/ipc.h>
+#include <sys/msg.h>
 
 #include "./msg_passing.h"
+#include "../sys_wrapper/sys_wrapper.h"
 
 int client_queue = -1;
 
@@ -41,5 +43,5 @@ int send_msg(msg *m)
 }
 int delete_client()
 {
-  close(client_queue);
+  return my_close(client_queue);
 }

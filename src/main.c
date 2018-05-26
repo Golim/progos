@@ -245,12 +245,13 @@ void set_config_defaults()
       strcpy(filename, DEF_TXT);
   }
 
-  if (arg_sep == UNSET)
+  if (arg_sep == UNSET){
     if (format == TYPE_CSV)
       strcpy(sep, " , ");
     else if (format == TYPE_TXT)
       strcpy(sep, "\t");
-
+  }
+  
   if (names == UNSET)
     names = FALSE;
 
