@@ -5,8 +5,9 @@
 #include <errno.h>
 
 #include "./util/util.h"
-#include "config_output.h"
 #include "./parser/parser.h"
+#include "config_output.h"
+#include "./program/program.h"
 
 //--local functions--
 /**
@@ -42,7 +43,6 @@ char sep[MAX_LEN_SEP] = "";
 int format = UNSET;
 int verbose = UNSET;
 bool mu = UNSET;
-extern int run_program(char*);
 int main(int argc, char **argv)
 {
   int r;
