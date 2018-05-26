@@ -1,7 +1,7 @@
 ./" Manpage for stats
-.TH STATS 1.0 "Maggio 2018" "version 1.0" "Università di Trento"
+.TH STATS 1.0 "May 2018" "version 1.0" "University of Trento"
 .SH NAME
-    stats \- esegue il comando passato per parametro e logga alcune statistiche sulla sua esecuzione in un file.
+    stats \- Execute COMMAND and log various statistics in a file.
 .SH SYNOPSIS
     stats [OPTIONS] ... [COMMAND]
 .SH OPTIONS
@@ -24,10 +24,10 @@
     -n, --names
         specifies whether the output should contain names of the fields.
 
-    -h, --help");
+    -h, --help
         display this help and exit.
 
-    -s=[v], --separator=[v]");
+    -s=[v], --separator=[v]
         specifies the separator that appears between the fields.
          [v] can be a character or a string
          in quotes if it is composed only of spaces
@@ -39,14 +39,13 @@
         if secified the program will print various information messages during
          the execution
 
-    -u, --usage");
+    -u, --usage
         give a short usage message.
 
     
 .SH BUGS
-    Il comando 'cd' non è supportato
+    The command 'cd' is not supported.
 .SH AUTHORS
     Ambrosi Davide\n
     Golinelli Matteo
     Ponza Matteo
-Università di Trento               MAGGIO 2018
