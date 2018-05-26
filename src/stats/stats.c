@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
 
 #include "stats.h"
 #include "../parser/parser.h"
@@ -30,6 +31,11 @@ int stats(char *cmd, char *stat, char *sep, bool mu, bool names)
 	clock_gettime(CLOCK_REALTIME, &clock_start_realtime);		 //Start realtime
 	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &clock_start_cputime); //Start CPUtime
 	
+	//Cambia la cartella di lavoro del processo se il comando contiene cd
+	if(strcmp(nome_comando, "cd") == 0){
+		chdir(argomenti);
+	}
+
 	//Execute command
 	return_code = system(cmd);
 
