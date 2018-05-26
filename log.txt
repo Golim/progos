@@ -1,8 +1,0 @@
-[cmd]nano___[args]qualcosa.txt___[duration_realtime]5498ms___[duration_CPU]233us___[return_code]0
-[cmd]ls___[args]tua mamma___[duration_realtime]2ms___[duration_CPU]86us___[return_code]512
-[cmd]lala___[args]___[duration_realtime]1ms___[duration_CPU]184us___[return_code]32512
-[cmd]lala___[args]___[duration_realtime]1___[duration_CPU]86___[return_code]32512
-ls ,  , 2ms , 66us , 0
-ls ,  , 3ms , 89us , 0
-[cmd]ls , [args]-al , [duration_realtime]3ms , [duration_CPU]144us , [return_code]0
-[cmd]wc , [args] , [duration_realtime]7ms , [duration_CPU]93us , [return_code]0
