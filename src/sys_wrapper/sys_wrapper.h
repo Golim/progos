@@ -1,7 +1,6 @@
 #ifndef SYS_WRAPPER_h
 #define SYS_WRAPPER_h
 
-#include "../util/util.h"
 void my_exit(int s);
 int my_wait(int *status);
 pid_t my_waitpid(pid_t pid, int *wstatus, int options);
