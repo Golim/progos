@@ -1,0 +1,115 @@
+src/main.c: In function ‘set_config_defaults’:
+src/main.c:248:6: warning: suggest explicit braces to avoid ambiguous ‘else’ [-Wdangling-else]
+   if (arg_sep == UNSET)
+      ^
+src/messanger/client.c: In function ‘init_client’:
+src/messanger/client.c:22:18: warning: implicit declaration of function ‘msgget’ [-Wimplicit-function-declaration]
+   client_queue = msgget(get_client_key(), 0666);
+                  ^~~~~~
+src/messanger/client.c: In function ‘send_msg’:
+src/messanger/client.c:36:7: warning: implicit declaration of function ‘msgsnd’ [-Wimplicit-function-declaration]
+   if (msgsnd(client_queue, m, sizeof(struct msg) - sizeof(long), 0) < 0)
+       ^~~~~~
+src/messanger/client.c: In function ‘delete_client’:
+src/messanger/client.c:44:3: warning: implicit declaration of function ‘close’; did you mean ‘pclose’? [-Wimplicit-function-declaration]
+   close(client_queue);
+   ^~~~~
+   pclose
+src/messanger/client.c:45:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+src/messanger/server.c: In function ‘get_server_key’:
+src/messanger/server.c:15:3: warning: implicit declaration of function ‘close’; did you mean ‘pclose’? [-Wimplicit-function-declaration]
+   close(fd);
+   ^~~~~
+   pclose
+src/messanger/server.c: In function ‘init_server’:
+src/messanger/server.c:27:18: warning: implicit declaration of function ‘msgget’ [-Wimplicit-function-declaration]
+   server_queue = msgget(get_server_key(), IPC_CREAT | 0777);
+                  ^~~~~~
+src/messanger/server.c: In function ‘start_listening’:
+src/messanger/server.c:42:9: warning: implicit declaration of function ‘msgrcv’ [-Wimplicit-function-declaration]
+     if (msgrcv(server_queue, m, sizeof(struct msg) - sizeof(long), 0, 0) < 0)
+         ^~~~~~
+src/messanger/server.c: In function ‘delete_server’:
+src/messanger/server.c:58:10: warning: implicit declaration of function ‘msgctl’ [-Wimplicit-function-declaration]
+   return msgctl(server_queue, IPC_RMID, NULL);
+          ^~~~~~
+src/execute/execute_commands.c: In function ‘execute_pipe’:
+src/execute/execute_commands.c:152:9: warning: unused variable ‘r’ [-Wunused-variable]
+     int r = execute(s1, f1); //esegui
+         ^
+src/execute/execute_commands.c: In function ‘execute_pipe_err’:
+src/execute/execute_commands.c:197:9: warning: unused variable ‘r’ [-Wunused-variable]
+     int r = execute(s1, f1);        //esegui
+         ^
+src/execute/execute_commands.c:185:7: warning: unused variable ‘std_err’ [-Wunused-variable]
+   int std_err = my_dup(STDERR_FILENO);
+       ^~~~~~~
+src/program/program.c: In function ‘run_program’:
+src/program/program.c:25:19: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+     for (i = 0; i < strlen("---------    output:\"\"    ---------n") + strlen(cmd); i++)
+                   ^
+src/logger/logger.c: In function ‘write_log’:
+src/logger/logger.c:24:6: warning: unused variable ‘res’ [-Wunused-variable]
+  int res;
+      ^~~
+src/stats/stats.c: In function ‘stats’:
+src/stats/stats.c:27:2: warning: implicit declaration of function ‘separe_command_args’ [-Wimplicit-function-declaration]
+  separe_command_args(cmd, nome_comando, argomenti);
+  ^~~~~~~~~~~~~~~~~~~
+src/parser/parser.c:11:7: warning: type defaults to ‘int’ in declaration of ‘N_CONTROL_OPERATOR’ [-Wimplicit-int]
+ const N_CONTROL_OPERATOR = 11;
+       ^~~~~~~~~~~~~~~~~~
+src/parser/parser.c: In function ‘run_cmd’:
+src/parser/parser.c:23:7: warning: unused variable ‘n’ [-Wunused-variable]
+   int n = execute(0, tks);
+       ^
+src/parser/parser.c: In function ‘separe_command_args’:
+src/parser/parser.c:41:17: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   for (i = 0; i <= strlen(cmd); i++)
+                 ^~
+src/parser/parser.c:76:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+src/parser/parser.c: In function ‘tokenize’:
+src/parser/parser.c:148:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+src/sys_wrapper/sys_wrapper.c: In function ‘my_open’:
+src/sys_wrapper/sys_wrapper.c:100:11: warning: implicit declaration of function ‘open’; did you mean ‘popen’? [-Wimplicit-function-declaration]
+   int r = open(pathname, flags, mode);
+           ^~~~
+           popen
+src/sys_wrapper/sys_wrapper.c: In function ‘my_wait’:
+src/sys_wrapper/sys_wrapper.c:28:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+src/sys_wrapper/sys_wrapper.c: In function ‘my_waitpid’:
+src/sys_wrapper/sys_wrapper.c:39:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+src/sys_wrapper/sys_wrapper.c: In function ‘my_dup’:
+src/sys_wrapper/sys_wrapper.c:50:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+src/sys_wrapper/sys_wrapper.c: In function ‘my_dup2’:
+src/sys_wrapper/sys_wrapper.c:61:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+src/sys_wrapper/sys_wrapper.c: In function ‘my_pipe’:
+src/sys_wrapper/sys_wrapper.c:72:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+src/sys_wrapper/sys_wrapper.c: In function ‘my_close’:
+src/sys_wrapper/sys_wrapper.c:83:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+src/sys_wrapper/sys_wrapper.c: In function ‘my_remove’:
+src/sys_wrapper/sys_wrapper.c:94:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+src/sys_wrapper/sys_wrapper.c: In function ‘my_open’:
+src/sys_wrapper/sys_wrapper.c:105:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^

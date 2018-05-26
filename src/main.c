@@ -43,7 +43,7 @@ char sep[MAX_LEN_SEP] = "";
 int format = UNSET;
 int verbose = UNSET;
 bool mu = UNSET;
-
+extern int run_program(char*);
 int main(int argc, char **argv)
 {
   int r;
@@ -238,10 +238,12 @@ void set_config_defaults()
   if (mu == UNSET)
     mu = TRUE;
   if (arg_filename == UNSET)
+  {
     if (format == TYPE_CSV)
       strcpy(filename, DEF_CSV);
     else if (format == TYPE_TXT)
       strcpy(filename, DEF_TXT);
+  }
 
   if (arg_sep == UNSET)
     if (format == TYPE_CSV)

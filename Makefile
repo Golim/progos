@@ -3,7 +3,7 @@ SRC = src
 BUILDING = obj
 BIN = bin
 
-CC = gcc -std=gnu90 -g
+CC = gcc -std=gnu90 -g -Wall -Wextra
 
 build: main
 
