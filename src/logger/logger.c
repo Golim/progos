@@ -21,7 +21,6 @@ int elaborate(msg *m)
 
 int write_log(msg *m)
 {
-	int res;
 	FILE *f;
 	switch (m->type)
 	{

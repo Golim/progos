@@ -22,7 +22,7 @@ int run_cmd(char *cmd)
 {
   tokenize(cmd);
   int n = execute(0, tks);
-  return 0;
+  return n;
 }
 
 /*

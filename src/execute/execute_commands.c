@@ -142,6 +142,8 @@ int execute_pipe(int s1, int f1, int s2, int f2)
   int stdin_fd = my_dup(STDIN_FILENO);
 
   p = fork();
+
+  int r;
   if (p < 0)
     return -1;
   else if (p > 0)
@@ -149,7 +151,7 @@ int execute_pipe(int s1, int f1, int s2, int f2)
     //Esegui 1:
     my_dup2(pipefd[1], STDOUT_FILENO); // sposta stdout
     my_close(pipefd[0]);
-    int r = execute(s1, f1); //esegui
+    r = execute(s1, f1); //esegui
     my_dup2(stdout_fd, 1);   //ripristina stdout
     my_close(pipefd[1]);
   }
@@ -158,10 +160,10 @@ int execute_pipe(int s1, int f1, int s2, int f2)
     //Esegui 2
     my_dup2(pipefd[0], STDIN_FILENO); //Sposta stdin
     my_close(pipefd[1]);
-    execute(s2, f2); //esegui
+    r = execute(s2, f2); //esegui
     my_dup2(stdin_fd, 0);
-    //exit(s); ????????????????????????
     my_close(pipefd[0]);
+    exit(r);
   }
   //restore stdin and stdout
 
@@ -186,17 +188,19 @@ int execute_pipe_err(int s1, int f1, int s2, int f2)
   int stdin_fd = my_dup(STDIN_FILENO);
 
   p = fork();
+
+  int r;
   if (p < 0)
-    return -1;
+    return -1;  
   else if (p > 0)
   {
     //Esegui 1:
     my_dup2(pipefd[1], STDOUT_FILENO); // sposta stdout
     my_dup2(pipefd[1], STDERR_FILENO); // sposta stderr
     my_close(pipefd[0]);
-    int r = execute(s1, f1);        //esegui
+    r = execute(s1, f1);           //esegui
     my_dup2(stdout_fd, STDOUT_FILENO); //ripristina stdout
-    my_dup2(stdout_fd, STDERR_FILENO); //ripristina stderr
+    my_dup2(  std_err, STDERR_FILENO); //ripristina stderr
     my_close(pipefd[1]);
   }
   else
@@ -204,10 +208,10 @@ int execute_pipe_err(int s1, int f1, int s2, int f2)
     //Esegui 2
     my_dup2(pipefd[0], STDIN_FILENO); //Sposta stdin
     my_close(pipefd[1]);
-    int s = execute(s2, f2); //esegui
+    r = execute(s2, f2); //esegui
     my_dup2(stdin_fd, 0);
     my_close(pipefd[0]);
-    exit(s);
+    exit(r);
   }
   //restore stdin and stdout
   
