@@ -1,5 +1,4 @@
 #!/bin/bash
-#TODO: metti numeri matricola
 ID_GRUPPO='LABSO1-2017_2018--186009_187679_188255'
 
 rm -rf ./$ID_GRUPPO

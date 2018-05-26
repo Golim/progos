@@ -1,0 +1,3 @@
+cd , qualcosa , 3ms , 104us , 512
+cd , /tmp/ , 0ms , 69us , 0
+cd , /tmp/ , 0ms , 73us , 0

@@ -129,7 +129,7 @@ int parse_argument(int argc, char **argv)
           }
         }
         // -mu or -measure-units
-        else if (strcmp(option, "-measure-units") == 0 || strcmp(option, "-mu") == 0)
+        else if (strcmp(option, "--measure-units") == 0 || strcmp(option, "-mu") == 0)
         {
           if (mu != UNSET)
             return ARG_DUP;
@@ -298,7 +298,7 @@ To stop the deamon process the following command should be invoked:\n\
 
   //-mu --measure-unit
   printf("%10s", "-mu=[v], ");
-  printf("%-20s", "-measure-units=[v]");
+  printf("%-20s", "--measure-units=[v]");
   printf("%s", "specifies whether the output should contain the unit of measurement.\n\
                                [v] can be 'true' or 'false'\n");
 
