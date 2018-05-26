@@ -14,8 +14,8 @@ int server_queue;
 key_t get_server_key()
 {
   int fd = open(EXTREF, 0777, O_CREAT);
-  //my_close(fd);
-  remove(EXTREF);
+  if(fd > 0 )
+    my_close(fd);
   int i = ftok(EXTREF, EXTID);
   if (i < 0)
   {
