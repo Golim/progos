@@ -44,7 +44,7 @@
 
     
 .SH BUGS
-    The command 'cd' is not supported.
+    The command 'cd' is supported only without parameters.
 .SH AUTHORS
     Ambrosi Davide\n
     Golinelli Matteo

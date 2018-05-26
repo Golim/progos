@@ -1,2 +1,1 @@
-4) Implementare il cambio di dir quando si usa cd. Es: "cd /tmp/ & ls", ls dovrebbe
-    stampare il contenuto di /tmp/ e non della cartella da cui è stato lanciato il programma
+

@@ -32,7 +32,10 @@ int stats(char *cmd, char *stat, char *sep, bool mu, bool names)
 	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &clock_start_cputime); //Start CPUtime
 	
 	//Cambia la cartella di lavoro del processo se il comando contiene cd
+	printf("%s, \"%s\"\n", nome_comando, argomenti);
 	if(strcmp(nome_comando, "cd") == 0){
+		if(strlen(argomenti) == 0)
+			strcpy(argomenti, getenv("HOME"));
 		chdir(argomenti);
 	}
 
