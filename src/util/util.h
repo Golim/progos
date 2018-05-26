@@ -13,9 +13,9 @@
 #define DEF_TXT ("/tmp/log.txt")
 #define DEF_CSV ("/tmp/log.csv")
 
-#define TYPE_CSV  (1)
-#define TYPE_TXT  (2)
-#define TYPE_EXIT (3)
+#define TYPE_CSV  ((int) 1)
+#define TYPE_TXT  ((int) 2)
+#define TYPE_EXIT ((int) 3)
 
 #define ARG_TOO_FEW           (-11)
 #define ARG_NOT_VALID_CMD     (-12)
@@ -41,7 +41,7 @@
 #define FAIL_STATUS (-1)
 #define STOP_STATUS (10)
 
-#define UNSET (-2147483648)
+#define UNSET ( (int) -200000)
 
 //white color for cmd
 #define ANSI_COLOR_CYAN "\x1b[36m"

@@ -3,6 +3,7 @@
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
+#include <unistd.h>
 
 #include "./msg_passing.h"
 #include "../sys_wrapper/sys_wrapper.h"
