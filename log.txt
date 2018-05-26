@@ -1,5 +1,4 @@
-[cmd]ls.....} &{[args]-al.....} &{[duration_realtime]42ms.....} &{[duration_CPU]51us.....} &{[return_code]0
-[cmd]ls.....} &{[args]-al.....} &{[duration_realtime]5ms.....} &{[duration_CPU]55us.....} &{[return_code]0
-[cmd]ls.....} &{[args]-al.....} &{[duration_realtime]4ms.....} &{[duration_CPU]66us.....} &{[return_code]0
-[cmd]ls.....} &{[args]-al.....} &{[duration_realtime]4ms.....} &{[duration_CPU]51us.....} &{[return_code]0
-[cmd]ls.....} &{[args]-al.....} &{[duration_realtime]5ms.....} &{[duration_CPU]67us.....} &{[return_code]0
+[cmd]cd}   {[args]/tmp/}   {[duration_realtime]0ms}   {[duration_CPU]95us}   {[return_code]0
+[cmd]ls}   {[args]}   {[duration_realtime]3ms}   {[duration_CPU]70us}   {[return_code]0
+[cmd]cd}   {[args]-L /tmp/}   {[duration_realtime]0ms}   {[duration_CPU]82us}   {[return_code]0
+[cmd]ls}   {[args]}   {[duration_realtime]2ms}   {[duration_CPU]69us}   {[return_code]0
