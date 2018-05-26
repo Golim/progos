@@ -13,7 +13,7 @@
  * */
 int stats(char *cmd, char *stat, char *sep, bool mu, bool names)
 {
-	strcpy(stat,"");
+	strcpy(stat, "");
 	int return_code;
 	long realtime_length; //in ms
 	long cputime_length;  //in ms
@@ -28,17 +28,17 @@ int stats(char *cmd, char *stat, char *sep, bool mu, bool names)
 
 	separe_command_args(cmd, nome_comando, argomenti);
 
-	clock_gettime(CLOCK_REALTIME, &clock_start_realtime);		 //Start realtime
+	clock_gettime(CLOCK_REALTIME, &clock_start_realtime);		   //Start realtime
 	clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &clock_start_cputime); //Start CPUtime
-	
+
 	//Cambia la cartella di lavoro del processo se il comando contiene cd
-	printf("%s, \"%s\"\n", nome_comando, argomenti);
-	if(strcmp(nome_comando, "cd") == 0){
-		if(strlen(argomenti) == 0)
+	if (strcmp(nome_comando, "cd") == 0)
+	{
+		if (strlen(argomenti) == 0)
 			strcpy(argomenti, getenv("HOME"));
 		chdir(argomenti);
 	}
-
+	
 	//Execute command
 	return_code = system(cmd);
 

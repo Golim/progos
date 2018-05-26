@@ -41,7 +41,6 @@
 
     -u, --usage
         give a short usage message.
-
     
 .SH BUGS
     The command 'cd' is supported only without parameters.
