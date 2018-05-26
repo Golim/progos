@@ -4,6 +4,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include "../sys_wrapper/sys_wrapper.h"
 #include "../util/util.h"
 
 char *my_strerr(int s);
