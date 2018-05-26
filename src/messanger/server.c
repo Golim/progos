@@ -23,7 +23,8 @@ key_t get_server_key()
 }
 int init_server()
 {
-  server_queue = msgget(get_server_key(), IPC_CREAT | IPC_EXCL | 0777);
+  //server_queue = msgget(get_server_key(), IPC_CREAT | IPC_EXCL | 0777);
+  server_queue = msgget(get_server_key(), IPC_CREAT | 0777);
   if (server_queue < 0)
   {
     fprintf(stderr, "Error in creating message queue: [%d] \n", errno);

@@ -78,7 +78,7 @@ int esegui_e_logga(char *cmd)
   msg message;
   int c;
 
-  if (strcmp(cmd, "stop_daemon") == 0)
+  if (strcmp(cmd, "stop-daemon") == 0)
     message.type = TYPE_EXIT;
   else
   {

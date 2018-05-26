@@ -271,7 +271,9 @@ Execute COMMAND , log various statistics in a file\n\
 The command MUST be the last argument passed to stats\n\n\
 Example:  stats  ls \n\
 If the command has argument, the command has to be in quotes\n\
-Example:  stats \"ls -al\"\n\n");
+Example:  stats \"ls -al\"\n\n\
+To stop the deamon process the following command should be invoked:\n\
+\t stats stop-daemon\n\nmake");
 
   printf(BOLDWHITE    "\tOPTIONS: "    ANSI_COLOR_RESET "\n");
   printf("All OPTION are not mandatory. Contemplated options are:\n");
