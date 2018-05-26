@@ -113,6 +113,9 @@ int parse_argument(int argc, char **argv)
           if (arg_filename != UNSET)
             return ARG_DUP;
 
+          if(strlen(filename) > MAX_LEN_FN)
+            return ARG_TOO_LONG;
+
           arg_filename = TRUE;
 
           if (is_valid_filename(value) == FALSE)  //function defined in util/util.c
@@ -151,7 +154,7 @@ int parse_argument(int argc, char **argv)
           if (format != UNSET)
             return ARG_BAD_USAGE;
           if(strlen(value)>MAX_LEN_SEP -1)
-            return ARG_SEP_TOO_LONG;
+            return ARG_TOO_LONG;
           else if (strcmp(value, "") != 0)
           {
             strcpy(sep, value);
