@@ -1,0 +1,50 @@
+./" Manpage for stats
+.TH STATS 1.0 "May 2018" "version 1.0" "University of Trento"
+.SH NAME
+    stats \- Execute COMMAND and log various statistics in a file.
+.SH SYNOPSIS
+    stats [OPTIONS] ... [COMMAND]
+.SH OPTIONS
+    -f=[v], --format=[v]
+        specifies the format for the output.
+         [v] can be 'csv' or 'txt'
+         if empty, the default format is csv
+
+    -lf=[v], --logfile=[v]
+        where [v] specifies the log file where stats will be appended
+         if not specified, the default file is different for csv or txt log
+         default files are:
+         /tmp/log.txt
+         /tmp/log.csv
+
+    -mu=[v], --measure-units=[v]
+        specifies whether the output should contain the unit of measurement.
+         [v] can be 'true' or 'false'
+
+    -n, --names
+        specifies whether the output should contain names of the fields.
+
+    -h, --help
+        display this help and exit.
+
+    -s=[v], --separator=[v]
+        specifies the separator that appears between the fields.
+         [v] can be a character or a string
+         in quotes if it is composed only of spaces
+         or if it contains special characters (|, &, ;, (, ) ...).
+         e.g. -s=" | "
+         N.B. you can not specify both -f and -s
+         
+    -v, --verbose
+        if secified the program will print various information messages during
+         the execution
+
+    -u, --usage
+        give a short usage message.
+    
+.SH BUGS
+    The command 'cd' is supported only without parameters.
+.SH AUTHORS
+    Ambrosi Davide\n
+    Golinelli Matteo
+    Ponza Matteo
